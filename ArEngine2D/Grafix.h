@@ -47,23 +47,28 @@ namespace ArEngine2D {
 		void DrawPolygon(Vec2 const& loc, std::vector<Vec2> const& vertices, ColorF const& color, float thick = 1.f);
 		void FillPolygon(Vec2 const& loc, std::vector<Vec2> const& vertices, ColorF const& color);
 
-		void DrawString(std::string str, Vec2 const& loc, ColorF const& color, float size, std::wstring fontName = L"Consolas") 
+		void DrawString(std::string str, Vec2 const& loc, ColorF const& color, float size, std::wstring fontName = L"Verdana") 
 		{
 			pSolidBrush_->SetColor(color);
 
 			Details::Ptr<IDWriteFactory> pDFactory{};
-			DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(pDFactory), &pDFactory);
+			HANDLE_GRAPHICS_ERROR(DWriteCreateFactory(
+				DWRITE_FACTORY_TYPE_SHARED, __uuidof(pDFactory), &pDFactory
+			));
 
 			Details::Ptr<IDWriteTextFormat> pFormat{};
-			pDFactory->CreateTextFormat(fontName.data(), nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
-				DWRITE_FONT_STRETCH_NORMAL, size, L"", &pFormat);
-			// pFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-			// pFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+			HANDLE_GRAPHICS_ERROR(pDFactory->CreateTextFormat(
+				fontName.data(), nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
+				DWRITE_FONT_STRETCH_NORMAL, size, L"", &pFormat
+			));
+			pFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+			pFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
-			D2D1_RECT_F const rect{loc.x, loc.y, size * 100.f, size * 100.f};
+			D2D1_RECT_F const rect{loc.x, loc.y , loc.x + size * 3.f * str.size(), loc.y + size * 3.f};
 			std::wstring const wstr{str.begin(), str.end()};
 
-			pRenderTarget_->DrawTextW(L"some bullshit", static_cast<UINT32>(std::size(L"some bullshit")), pFormat.Get(), rect, pSolidBrush_.Get());
+			pRenderTarget_->DrawTextW(wstr.data(), static_cast<UINT32>(std::size(wstr)),
+				pFormat.Get(), rect, pSolidBrush_.Get());
 
 			/*
 			

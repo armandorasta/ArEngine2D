@@ -95,7 +95,7 @@ namespace ArEngine2D {
 		 * @return the location of the center of the game window.
 		*/
 		constexpr auto Center() const noexcept
-		{ return Loc() * 0.5f; }
+		{ return Vec2{static_cast<float>(width_), static_cast<float>(height_)} * 0.5f; }
 
 		/**
 		 * @return 

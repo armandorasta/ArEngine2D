@@ -22,7 +22,8 @@ namespace ArEngine2D {
 				gfx_.BeginDraw();
 				gfx_.ClearScreen({.8f, .5f, 0.f});
 
-				gfx_.DrawString("my string is right here.", mouse.loc, Colors::MAGENTA, 30.f);
+				// gfx.DrawTriangle(mouse.loc, {-100.f, -100.f}, {-100.f, 100.f}, {100.f, 0.f}, Colors::DARK_GREEN, 5.f);
+				gfx.DrawLine(mouse.loc, window_.Center(), Colors::YELLOW, 5.f);
 
 				gfx_.EndDraw();
 			}

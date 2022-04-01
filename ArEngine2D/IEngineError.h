@@ -4,6 +4,7 @@
 
 #include <comdef.h>
 #include <dxgidebug.h>
+#include <d2d1.h>
 
 #include <string>
 #include <string_view>
@@ -89,6 +90,8 @@ namespace ArEngine2D {
 	*/
 	class GraphicsError : public IEngineError
 	{
+	public:
+
 		using IEngineError::IEngineError;
 		virtual std::string MessageBoxTitle() const override;
 
@@ -98,6 +101,8 @@ namespace ArEngine2D {
 			std::source_location debugInfo = std::source_location::current());
 		static void HandleDraw(std::function<void()>&& callable, std::string_view optMessage = { }, 
 			std::source_location debugInfo = std::source_location::current());
+		static void HandleEndDrawError(ID2D1HwndRenderTarget* pRenderTarget,
+			std::source_location debugInfo = std::source_location::current());
 	};
 }
 
@@ -105,10 +110,10 @@ namespace ArEngine2D {
 #ifndef NDEBUG
 // These two are probably gonna remain as macros forever.
 #define HANDLE_GRAPHICS_ERROR(hResCall) GraphicsError::Handle([&]{ return hResCall; })
-#define HANDLE_DRAW_ERROR(drawCall) GraphicsError::HandleDraw([&]{ drawCall; })
+#define HANDLE_ENDDRAW_ERROR(_pRenderTarget) GraphicsError::HandleEndDrawError(_pRenderTarget)
 #else
 #define HANDLE_GRAPHICS_ERROR(hResCall) hResCall
-#define HANDLE_DRAW_ERROR(drawCall) drawCall
+#define HANDLE_ENDDRAW_ERROR(_pRenderTarget) _pRenderTarget->EndDraw()
 #endif
 
 #define DEVICE_REMOVED_ERROR(pDevice) \

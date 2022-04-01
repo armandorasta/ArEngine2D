@@ -160,6 +160,22 @@ namespace ArEngine2D
     {
         return "Engine Error";
     }
+    void GraphicsError::HandleEndDrawError(ID2D1HwndRenderTarget* pRenderTarget,
+        std::source_location debugInfo)
+    {
+        // I have never got an error here but, the documentation says it's possible.
+        if (SUCCEEDED(pRenderTarget->EndDraw()))
+        {
+            return;
+        }
+        else throw GraphicsError{
+            "One of the drawing operations (after the last call to ID2D1HwndRenderTarget::EndDraw) failed;"
+            "this message is sent from ID2D1HwndRenderTarget::EndDraw."
+            "By this point (at least in the current implementation), "
+            "the system can't tell which function exactly failed.", 
+            debugInfo
+        };
+    }
     std::string GraphicsError::MessageBoxTitle() const
     {
         return "Graphics Error";
@@ -178,7 +194,7 @@ namespace ArEngine2D
         callable();
         if (HasNewMessages())
         {
-            throw GraphicsError{E_INVALIDARG, optMessage, debugInfo};
+            throw GraphicsError{optMessage, debugInfo};
         }
     }
     std::string InitializationError::MessageBoxTitle() const

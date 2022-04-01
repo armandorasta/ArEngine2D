@@ -29,7 +29,7 @@ namespace ArEngine2D {
 	}
 	void Grafix::EndDraw()
 	{
-		pRenderTarget_->EndDraw();
+		HANDLE_ENDDRAW_ERROR(pRenderTarget_.Get());
 	}
 	void Grafix::ClearScreen(ColorF const& color)
 	{
