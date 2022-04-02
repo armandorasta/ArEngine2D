@@ -59,7 +59,7 @@ namespace ArEngine2D {
 	};
 
 	/**
-	 * @brief errors thrown by ArEngine::Engine class.
+	 * @brief errors thrown by Engine class.
 	*/
 	class EngineError : public IEngineError
 	{
@@ -68,7 +68,7 @@ namespace ArEngine2D {
 	};
 
 	/**
-	 * @brief errors thrown by ArEngine::Window class.
+	 * @brief errors thrown by Window class.
 	*/
 	class WindowError : public IEngineError
 	{
@@ -86,7 +86,7 @@ namespace ArEngine2D {
 	};
 
 	/**
-	 * @brief errors thrown by ArEngine::Grafix class.
+	 * @brief errors thrown by Grafix class.
 	*/
 	class GraphicsError : public IEngineError
 	{
@@ -98,8 +98,6 @@ namespace ArEngine2D {
 	public:
 		// Ok to use std::function because, the macro does not call this function is release mode.
 		static void Handle(std::function<HRESULT()>&& callable, std::string_view optMessage = { }, 
-			std::source_location debugInfo = std::source_location::current());
-		static void HandleDraw(std::function<void()>&& callable, std::string_view optMessage = { }, 
 			std::source_location debugInfo = std::source_location::current());
 		static void HandleEndDrawError(ID2D1HwndRenderTarget* pRenderTarget,
 			std::source_location debugInfo = std::source_location::current());

@@ -40,6 +40,7 @@ namespace ArEngine2D {
 		 * @param title => the new title.
 		*/
 		void SetTitle(std::string const& title);
+		void UpdateTitle();
 
 	protected:
 		void Initialize();

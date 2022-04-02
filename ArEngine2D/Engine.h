@@ -30,6 +30,7 @@ namespace ArEngine2D {
 	private:
 		void Initialize();
 		float GetFrameDelta();
+		void UpdateTitle(float dt);
 
 	public:
 

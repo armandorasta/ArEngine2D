@@ -26,6 +26,9 @@ namespace ArEngine2D
 	void Window::SetTitle(std::string const& title)
 	{
 		title_ = title;
+	}
+	void Window::UpdateTitle()
+	{
 		SetWindowTextA(handle_, title_.data());
 	}
 	void Window::Initialize()

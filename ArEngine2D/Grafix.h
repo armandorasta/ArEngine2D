@@ -9,6 +9,9 @@
 #include <dwrite.h>
 #include <d2d1.h>
 
+#include <wincodec.h>
+#include <string>
+
 namespace ArEngine2D {
 	class Grafix : Details::ISingle
 	{ 
@@ -75,6 +78,33 @@ namespace ArEngine2D {
 				TODO: fix this code (the text behaves strangely but, it does show up).
 			
 			*/
+		}
+
+		void DrawBitmap(Vec2 const& loc, std::wstring_view fileName)
+		{
+			Details::Ptr<ID2D1Bitmap> pBitmap{};
+			Details::Ptr<IWICImagingFactory> pImagingFactory{};
+			Details::Ptr<IWICBitmapDecoder> pDecoder{};
+			Details::Ptr<IWICBitmapFrameDecode> pFrameDecode{};
+			Details::Ptr<IWICFormatConverter> pConverter{};
+
+			HANDLE_GRAPHICS_ERROR(CoCreateInstance(
+				CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, __uuidof(IWICImagingFactory), &pImagingFactory
+			));
+			HANDLE_GRAPHICS_ERROR(pImagingFactory->CreateDecoderFromFilename(
+				fileName.data(), nullptr, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &pDecoder
+			));
+			HANDLE_GRAPHICS_ERROR(pDecoder->GetFrame(0U, &pFrameDecode));
+			HANDLE_GRAPHICS_ERROR(pImagingFactory->CreateFormatConverter(&pConverter));
+			HANDLE_GRAPHICS_ERROR(pConverter->Initialize(
+				pFrameDecode.Get(), GUID_WICPixelFormat32bppPBGRA, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeCustom
+			));
+			HANDLE_GRAPHICS_ERROR(pRenderTarget_->CreateBitmapFromWicBitmap(
+				pConverter.Get(), nullptr, &pBitmap
+			));
+			auto const bitmapSize{pBitmap->GetSize()};
+			auto const drawRect{D2D1::RectF(loc.x, loc.y, loc.x + bitmapSize.width, loc.y + bitmapSize.height)};
+			pRenderTarget_->DrawBitmap(pBitmap.Get(), drawRect);
 		}
 
 	private:

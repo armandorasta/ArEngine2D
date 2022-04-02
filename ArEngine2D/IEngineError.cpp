@@ -188,15 +188,6 @@ namespace ArEngine2D
             throw GraphicsError{hRes, optMessage, debugInfo};
         }
     }
-    void GraphicsError::HandleDraw(std::function<void()>&& callable, std::string_view optMessage, std::source_location debugInfo)
-    {
-        SetInfoQueueIndex();
-        callable();
-        if (HasNewMessages())
-        {
-            throw GraphicsError{optMessage, debugInfo};
-        }
-    }
     std::string InitializationError::MessageBoxTitle() const
     {
         return "Initialization Error";
