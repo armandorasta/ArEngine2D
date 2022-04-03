@@ -22,6 +22,7 @@ namespace ArEngine2D {
 		HANDLE_GRAPHICS_ERROR(pRenderTarget_->CreateSolidColorBrush(
 			{}, pSolidBrush_.GetAddressOf()
 		));
+		Sprite::InternalInitialization(pRenderTarget_);
 	}
 	void Grafix::BeginDraw()
 	{
@@ -177,6 +178,15 @@ namespace ArEngine2D {
 		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Translation({loc.x, loc.y}));
 		pRenderTarget_->FillGeometry(pGeometry.Get(), pSolidBrush_.Get());
 		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Identity());
+	}
+	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity, D2D1_MATRIX_3X2_F transform)
+	{
+		D2D1_RECT_F const destRect{
+			0.f, 0.f, sprite.Width(), sprite.Height()
+		};
+		pRenderTarget_->SetTransform(transform * D2D1::Matrix3x2F::Translation(loc.x, loc.y));
+		pRenderTarget_->DrawBitmap(sprite.D2DPtr(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+		pRenderTarget_->SetTransform(D2D1::IdentityMatrix());
 	}
 	bool Grafix::IsInitialized() const noexcept
 	{

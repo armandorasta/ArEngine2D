@@ -47,4 +47,19 @@ namespace ArEngine2D {
 		bool bDown_;
 		bool bStateCurrFrame_;
 	};
+
+	enum class Keys
+	{
+		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+		NUM0, NUM1, NUM2, NUM3, NUM4, NUM5, NUM6, NUM7, NUM8, NUM9,
+		MUL, DIV, ADD, SUB, DECIMAL, 
+		F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
+		UP, DOWN, LEFT, RIGHT,
+		CONTROL, LEFT_CONTROL, RIGHT_CONTROL,
+		SHIFT,  LEFT_SHIFT, RIGHT_SHIFT,
+		ALT, LEFT_ALT, RIGHT_ALT,
+		ESCAPE, TAB, CAPSLOCK, NUMLOCK, 
+		ENTER, SPACE, BACKSPACE, DEL /*DELETE is a macro*/, INSERT, HOME, END,
+		PRINT,
+	};
 }

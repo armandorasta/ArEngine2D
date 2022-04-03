@@ -2,7 +2,8 @@
 	* handle ID2D1HwndRenderTarget::EndDraw errors
 
 * graphics:
-	* finish sprite loading and drawing.
+	* finish switching to ArEngine2D::Keys.
+	* finish sprite drawing by adding the Transform class.
 	* add DrawString.
 	* try to learn gradiants and curves.
 	* add the dashed variations.

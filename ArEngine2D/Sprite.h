@@ -16,22 +16,23 @@ namespace ArEngine2D {
 
 	private:
 		inline static Details::Ptr<IWICImagingFactory> s_pImagingFactory_{};
-		inline static Details::Ptr<IWICFormatConverter> s_pConverter_{};
 		inline static Details::Ptr<ID2D1RenderTarget> s_pRenderTarget_{};
 	public:
 
-		Sprite()	   = default; // can't (and shouldn't) do loading in the constructor.
-		Sprite(self&&) = default;
+		Sprite() = default; // can't (and shouldn't) do loading in the constructor.
 
-		Sprite(self const&);
+		// sprites copied or moved from must be initialized.
+		Sprite(self const& that);
+		Sprite(self&& that) noexcept;
 
 	public:
 
 		void Initialize(std::wstring_view fileName);
+		bool IsInitialized() const noexcept;
 		void CopyFromMemory(void const* pData, D2D1_RECT_U const& whereTo, std::size_t pitch);
 		void CopyFromSprite(Sprite const& that, D2D1_RECT_U const& from, D2D1_POINT_2U const& whereTo);
 		void CopyFromSprite(Sprite const& that);
-		void MoveFromSprite(Sprite& that); // not sure if I should make it noexcept or not.
+		void MoveFromSprite(Sprite& that) noexcept;
 
 	public:
 
@@ -51,7 +52,6 @@ namespace ArEngine2D {
 	private:
 
 		void InitializeMinorMembers();
-		bool IsInitialized() const noexcept;
 		void IntializationCheck() const noexcept;
 
 	private:
