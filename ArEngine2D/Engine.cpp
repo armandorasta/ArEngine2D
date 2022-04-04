@@ -19,9 +19,6 @@ namespace ArEngine2D {
 			while (window_.ProcessMessages())
 			{
 				auto const dt{GetFrameDelta()};
-				UpdateTitle(dt);
-				OnUserUpdate(dt);
-				window_.InputUpdate();
 				gfx_.BeginDraw();
 				gfx_.ClearScreen({.8f, .5f, 0.f});
 
@@ -29,14 +26,26 @@ namespace ArEngine2D {
 				angle = std::fmod(angle + 10.f * dt, 3.1415926f * 2.f);
 				OutputDebugStringA(std::format("angle: {}\n", angle).data());
 
-				Sprite myPNG{};
-				myPNG.Initialize(L"MyPNG.png");
-				gfx.DrawSprite(mouse.loc, myPNG, 0.5f, 
-					D2D1::Matrix3x2F::Rotation(angle * 180.f / 3.1415926f) *
-					D2D1::Matrix3x2F::Scale(5.f, 5.f)
-				);
+				static bool flag{};
+				if (keyboard(Keys::ALT).IsPressed())
+				{
+					flag ^= 1;
+				}
+
+				if (flag)
+				{
+					Sprite myPNG{};
+					myPNG.Initialize(L"MyPNG.png");
+					gfx.DrawSprite(mouse.loc, myPNG, 0.5f,
+						D2D1::Matrix3x2F::Rotation(angle * 180.f / 3.1415926f) *
+						D2D1::Matrix3x2F::Scale(5.f, 5.f)
+					);
+				}
 
 				gfx_.EndDraw();
+				window_.InputUpdate();
+				UpdateTitle(dt);
+				OnUserUpdate(dt);
 			}
 		}
 		catch (IEngineError const& err)

@@ -26,20 +26,21 @@ namespace ArEngine2D {
 	public:
 
 		/**
-		 * @return the key with the specified id.
+		 * @return the state of the specified key.
 		*/
-		constexpr auto GetKey(size_t id) const noexcept -> Key const&
+		constexpr auto GetKey(Keys key) const noexcept -> Key const&
 		{
+			auto const id{KeyToID(key)};
 			assert(id < Keyboard::KEY_COUNT);
 			return keys_[id];
 		}
 
 		/**
-		 * @return the key with the specified id.
+		 * @return the state of the specified key.
 		*/
-		constexpr auto operator()(size_t id) const noexcept -> Key const&
+		constexpr auto operator()(Keys key) const noexcept -> Key const&
 		{
-			return GetKey(id);
+			return GetKey(key);
 		}
 
 		/**
@@ -77,7 +78,7 @@ namespace ArEngine2D {
 		}
 
 	private: // these will be accessed by the Window class
-		constexpr void SetKey(size_t keyID, bool state) noexcept
+		constexpr void SetKey(std::size_t keyID, bool state) noexcept
 		{
 			keys_[keyID].Set(state);
 		}

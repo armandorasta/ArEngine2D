@@ -158,14 +158,14 @@ namespace ArEngine2D
 			case WM_KEYDOWN:
 			case WM_SYSKEYDOWN: // for ALT
 			{
-				keyboard.SetKey(static_cast<size_t>(wParam), true);
+				keyboard.SetKey(static_cast<std::size_t>(wParam), true);
 				break;
 			}
 
 			case WM_KEYUP:
 			case WM_SYSKEYUP: // for ALT
 			{
-				keyboard.SetKey(static_cast<size_t>(wParam), false);
+				keyboard.SetKey(static_cast<std::size_t>(wParam), false);
 				break;
 			}
 
