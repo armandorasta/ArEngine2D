@@ -3,6 +3,7 @@
 ///
 #include <numbers>
 #include <chrono>
+#include "Transform.h"
 ///
 
 namespace ArEngine2D {
@@ -22,25 +23,30 @@ namespace ArEngine2D {
 				gfx_.BeginDraw();
 				gfx_.ClearScreen({.8f, .5f, 0.f});
 
-				static float angle{};
-				angle = std::fmod(angle + 10.f * dt, 3.1415926f * 2.f);
-				OutputDebugStringA(std::format("angle: {}\n", angle).data());
-
-				static bool flag{};
-				if (keyboard(Keys::ALT).IsPressed())
+				auto const graphicsCode = [&] 
 				{
-					flag ^= 1;
-				}
+					static float angle{};
+					angle = std::fmod(angle + 10.f * dt, 3.1415926f * 2.f);
+					OutputDebugStringA(std::format("angle: {}\n", angle).data());
 
-				if (flag)
-				{
-					Sprite myPNG{};
-					myPNG.Initialize(L"MyPNG.png");
-					gfx.DrawSprite(mouse.loc, myPNG, 0.5f,
-						D2D1::Matrix3x2F::Rotation(angle * 180.f / 3.1415926f) *
-						D2D1::Matrix3x2F::Scale(5.f, 5.f)
-					);
-				}
+					static bool flag{};
+					if (keyboard(Keys::ALT).IsPressed())
+					{
+						flag ^= 1;
+					}
+
+					if (true)
+					{
+						Sprite myPNG{};
+						myPNG.Initialize(L"MyPNG.png");
+					
+						Transform t{};
+						t.Rotate(angle).Scale(5.f);
+						gfx.DrawSprite(mouse.loc, myPNG, 0.5f, t);
+					}
+
+					return false;
+				}();
 
 				gfx_.EndDraw();
 				window_.InputUpdate();

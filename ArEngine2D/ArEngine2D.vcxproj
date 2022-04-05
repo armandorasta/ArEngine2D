@@ -171,6 +171,7 @@
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Testing\ArTest20.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Window.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Grafix.cpp" />
     <ClCompile Include="IEngineError.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />

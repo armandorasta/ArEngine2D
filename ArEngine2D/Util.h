@@ -6,6 +6,7 @@
 #include <compare>
 #include <concepts>
 #include <string_view>
+#include <numbers>
 
 
 namespace ArEngine2D::Details {
@@ -83,6 +84,45 @@ namespace ArEngine2D {
 				std::strong_ordering::greater :
 				std::strong_ordering::less
 			};
+		}
+
+		/**
+		 * @brief takes an angle in radians.
+		 * @return the equivalent angle measured in degrees.
+		*/
+		template <std::floating_point TNum>
+		constexpr static auto RadianToDegree(TNum angle)
+		{
+			return static_cast<TNum>(180) * angle / std::numbers::pi_v<TNum>;
+		}
+
+		/**
+		 * @brief takes an angle in degrees.
+		 * @return the equivalent angle measured in radians.
+		*/
+		template <std::floating_point TNum>
+		constexpr static auto DegreeToRadian(TNum angle)
+		{
+			return std::numbers::pi_v<TNum> * angle / static_cast<TNum>(180);
+		}
+
+		/**
+		 * @brief wraps an angle measured in radians to an unspecified range;
+		 *        could be [0, 2pi) or [-pi, +pi).
+		 * @return a wrapped version of the angle.
+		*/
+		template <std::floating_point TNum>
+		constexpr auto WrapAngle(TNum angle)
+		{
+			// n which is (a * 2 * pi + b)
+			// mul => a + (b / 2pi)
+			auto const mul{(angle / std::numbers::pi_v<TNum>) * static_cast<TNum>(0.5)};
+			// floorMul => a
+			auto const floorMul{static_cast<std::int32_t>(mul)};
+			// floorRemainder => b / 2pi
+			auto const floorRemainder{mul - static_cast<TNum>(floorMul)};
+			// return value => b * n #
+			return floorRemainder * angle;
 		}
 	};
 }

@@ -179,12 +179,12 @@ namespace ArEngine2D {
 		pRenderTarget_->FillGeometry(pGeometry.Get(), pSolidBrush_.Get());
 		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Identity());
 	}
-	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity, D2D1_MATRIX_3X2_F transform)
+	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity, Transform transform)
 	{
 		D2D1_RECT_F const destRect{
 			0.f, 0.f, sprite.Width(), sprite.Height()
 		};
-		pRenderTarget_->SetTransform(transform * D2D1::Matrix3x2F::Translation(loc.x, loc.y));
+		pRenderTarget_->SetTransform(transform.Matrix() * D2D1::Matrix3x2F::Translation(loc.x, loc.y));
 		pRenderTarget_->DrawBitmap(sprite.D2DPtr(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
 		pRenderTarget_->SetTransform(D2D1::IdentityMatrix());
 	}

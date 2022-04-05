@@ -30,7 +30,8 @@ namespace ArEngine2D {
 		constexpr operator D2D1_POINT_2F() const 
 		{ return {x, y}; }
 
-		/** @brief creats a vector using a directionand a length
+		/** 
+		* @brief creats a vector using a direction and a length.
 		 * @param dir => the direction of the vector (angle in radians)
 		 * @param len => the length of the vector (defaults to 1)
 		 * @return <cos(dir), sin(dir)> * len

@@ -18,16 +18,18 @@ namespace ArEngine2D {
 	}
 	auto Vec2::Rotated(float angle) const noexcept -> self
 	{
-		float fCos{ }, fSin{ };
-		DirectX::XMScalarSinCos(&fSin, &fCos, angle);
+		// did not use SinCos because I am planning to switch to 
+		// std::sin and std::cos in c++23
+		float fCos{DirectX::XMScalarCos(angle)};
+		float fSin{DirectX::XMScalarSin(angle)};
 		return {
 			x * fCos - y * fSin,
 			x * fSin + y * fCos,
 		};
 	}
 	void Vec2::Rotate(float angle) noexcept
-	{ 
-		operator=(Rotated(angle)); 
+	{
+		operator=(Rotated(angle));
 	}
 	auto Vec2::ToString() const -> std::string
 	{ 

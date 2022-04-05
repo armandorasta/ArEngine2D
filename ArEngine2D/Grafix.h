@@ -6,6 +6,7 @@
 #include "Vec2.h"
 #include "IEngineError.h"
 #include "Sprite.h"
+#include "Transform.h"
 
 #include <dwrite.h>
 #include <d2d1.h>
@@ -81,7 +82,7 @@ namespace ArEngine2D {
 			*/
 		}
 
-		void DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f, D2D1_MATRIX_3X2_F transform = D2D1::Matrix3x2F::Identity());
+		void DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f, Transform transform = Transform{});
 
 	private:
 

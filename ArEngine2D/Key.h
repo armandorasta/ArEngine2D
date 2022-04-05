@@ -15,6 +15,9 @@ namespace ArEngine2D {
 
 	public:
 		
+		/**
+		 * @brief needs to be called after rendering to the screen for some reason.
+		*/
 		constexpr void FrameUpdate() noexcept
 		{
 			bPress_ = bStateCurrFrame_ and not bStateLastFrame_;
@@ -22,6 +25,10 @@ namespace ArEngine2D {
 			bStateLastFrame_ = bStateCurrFrame_;
 		}
 
+		/**
+		 * @brief changes the state for the current frame.
+		 * @param state => the new state.
+		*/
 		constexpr void Set(bool state) noexcept
 		{
 			bStateCurrFrame_ = state;
@@ -55,10 +62,9 @@ namespace ArEngine2D {
 	enum class Keys : std::size_t
 	{
 		// alphabet
-		A = 'A', B = 'B', C = 'C', D = 'D', E = 'E', F = 'F', G = 'G', 
-		H = 'H', I = 'I', J = 'J', K = 'K', L = 'L', M = 'M', N = 'N', 
-		O = 'O', P = 'P', Q = 'Q', R = 'R', S = 'S', T = 'T', U = 'U', 
-		V = 'V', W = 'W', X = 'X', Y = 'Y', Z = 'Z',
+		A = 'A', B = 'B', C = 'C', D = 'D', E = 'E', F = 'F', G = 'G', H = 'H', I = 'I', 
+		J = 'J', K = 'K', L = 'L', M = 'M', N = 'N', O = 'O', P = 'P', Q = 'Q', R = 'R', 
+		S = 'S', T = 'T', U = 'U', V = 'V', W = 'W', X = 'X', Y = 'Y', Z = 'Z',
 		// number pad
 		NUM0 = VK_NUMPAD0, NUM1 = VK_NUMPAD1, NUM2 = VK_NUMPAD2, NUM3 = VK_NUMPAD3, NUM4 = VK_NUMPAD4, 
 		NUM5 = VK_NUMPAD5, NUM6 = VK_NUMPAD6, NUM7 = VK_NUMPAD7, NUM8 = VK_NUMPAD8, NUM9 = VK_NUMPAD9,
