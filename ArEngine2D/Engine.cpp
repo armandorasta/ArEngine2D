@@ -20,38 +20,20 @@ namespace ArEngine2D {
 			while (window_.ProcessMessages())
 			{
 				auto const dt{GetFrameDelta()};
-				gfx_.BeginDraw();
-				gfx_.ClearScreen({.8f, .5f, 0.f});
 
-				auto const graphicsCode = [&] 
-				{
-					static float angle{};
-					angle = std::fmod(angle + 10.f * dt, 3.1415926f * 2.f);
-					OutputDebugStringA(std::format("angle: {}\n", angle).data());
-
-					static bool flag{};
-					if (keyboard(Keys::ALT).IsPressed())
-					{
-						flag ^= 1;
-					}
-
-					if (true)
-					{
-						Sprite myPNG{};
-						myPNG.Initialize(L"MyPNG.png");
-					
-						Transform t{};
-						t.Rotate(angle).Scale(5.f);
-						gfx.DrawSprite(mouse.loc, myPNG, 0.5f, t);
-					}
-
-					return false;
-				}();
-
-				gfx_.EndDraw();
+				// update keyboard and mouse input
 				window_.InputUpdate();
-				UpdateTitle(dt);
+
+				// update the user's code
 				OnUserUpdate(dt);
+
+				// Render to the screen
+				gfx_.BeginDraw();
+				OnUserDraw(gfx_);
+				gfx_.EndDraw();
+
+				// show the fps and other stuff
+				UpdateTitle(dt);
 			}
 		}
 		catch (IEngineError const& err)

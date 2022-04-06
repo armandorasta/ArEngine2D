@@ -27,15 +27,28 @@ namespace ArEngine2D {
 		 */
 		virtual void OnUserUpdate(float dt) = 0;
 
+		/**
+		 * @brief called every frame. user can only render to screen through here.
+		 * @param gfx => a handle to the graphics interface.
+		*/
+		virtual void OnUserDraw(Grafix& gfx) = 0;
+
 	private:
+		// Initialization has it's own function for convience. (see the cpp file)
 		void Initialize();
+		// currently uses std::chrono.
 		float GetFrameDelta();
 		void UpdateTitle(float dt);
 
 	public:
-
-		Grafix& gfx{gfx_};
+		/**
+		 * @brief a handle to all the keyboard input.
+		*/
 		Keyboard const& keyboard{window_.keyboard};
+
+		/**
+		 * @brief a handle to all the mouse input.
+		*/
 		Mouse const& mouse{window_.mouse};
 
 	private:

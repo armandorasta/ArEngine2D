@@ -13,9 +13,9 @@ namespace ArEngine2D {
 	{
 		friend class Engine;
 	private:
-		constexpr static auto s_ClassName  = L"class name";
-		constexpr static UINT s_ClassStyle = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-		constexpr static UINT s_WinStyle   = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME;
+		constexpr static auto sc_ClassName  = L"class name";
+		constexpr static UINT sc_ClassStyle = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+		constexpr static UINT sc_WinStyle   = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME;
 
 		inline static Window* s_ActiveWindow{};
 
@@ -26,27 +26,31 @@ namespace ArEngine2D {
 		 * @param title => text that will apear on the top left (mostly) of your window.
 		 * @param width => the actual width of the client area.
 		 * @param height => the actual height of the client area.
-		 * @param hInstance => pass it directly from WinMain.
 		*/
-		Window(std::string_view title, std::int32_t width, std::int32_t height, 
-			std::int32_t x = 0, std::int32_t y = 0);
-
+		Window(std::string_view title, std::int32_t width, std::int32_t height, std::int32_t x = 0, std::int32_t y = 0);
 		~Window();
 
 	public:
 
 		/**
-		 * @brief changes the title of the window to the one passed.
+		 * @brief changes the title of the window to the one passed but,
+		 *		  does not update the text yet.
 		 * @param title => the new title.
 		*/
-		void SetTitle(std::string const& title);
-		void UpdateTitle();
+		void SetTitle(std::string const& title) noexcept
+		{ title_ = title; }
+
+		/**
+		 * @brief updates the title text if it was changed (through SetTitle).
+		 * @return true if the update was successful, false otherwise.
+		*/
+		bool UpdateTitle() noexcept;
 
 	protected:
 		void Initialize();
-		auto ProcessMessages() -> bool;
+		auto ProcessMessages() noexcept -> bool;
 		
-		void InputUpdate();
+		void InputUpdate() noexcept;
 
 		void InitializeRawInput();
 		void EnableRawInput();

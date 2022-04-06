@@ -16,7 +16,7 @@ namespace ArEngine2D {
 	public:
 		
 		/**
-		 * @brief needs to be called after rendering to the screen for some reason.
+		 * @brief must be called every frame for input to be processed correctly (not by the user).
 		*/
 		constexpr void FrameUpdate() noexcept
 		{

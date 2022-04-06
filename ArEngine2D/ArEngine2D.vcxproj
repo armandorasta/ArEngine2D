@@ -184,7 +184,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

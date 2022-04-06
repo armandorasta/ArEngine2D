@@ -20,16 +20,12 @@ namespace ArEngine2D
 		if (handle_)
 		{
 			DestroyWindow(handle_);
-			UnregisterClassW(s_ClassName, GetModuleHandleA(nullptr));
+			UnregisterClassW(sc_ClassName, GetModuleHandleA(nullptr));
 		}
 	}
-	void Window::SetTitle(std::string const& title)
+	bool Window::UpdateTitle() noexcept
 	{
-		title_ = title;
-	}
-	void Window::UpdateTitle()
-	{
-		SetWindowTextA(handle_, title_.data());
+		return SetWindowTextA(handle_, title_.data());
 	}
 	void Window::Initialize()
 	{
@@ -46,7 +42,7 @@ namespace ArEngine2D
 			.right{static_cast<LONG>(width_)},
 			.bottom{static_cast<LONG>(height_)}
 		};
-		if (not AdjustWindowRectEx(&winRect, Window::s_WinStyle, FALSE, NULL))
+		if (not AdjustWindowRectEx(&winRect, Window::sc_WinStyle, FALSE, NULL))
 		{
 			throw WINDOW_ERROR("AdjustWindowRect returned false");
 		}
@@ -57,7 +53,7 @@ namespace ArEngine2D
 		auto const actX{useDefaultWindowLoc ? CW_USEDEFAULT : static_cast<int>(x_)};
 		auto const actY{useDefaultWindowLoc ? CW_USEDEFAULT : static_cast<int>(y_)};
 
-		handle_ = CreateWindowExW(NULL, Window::s_ClassName, wtitle_.c_str(), Window::s_WinStyle,
+		handle_ = CreateWindowExW(NULL, Window::sc_ClassName, wtitle_.c_str(), Window::sc_WinStyle,
 			actX, actY, actWidth, actHeight, nullptr, nullptr, GetModuleHandleA(nullptr), nullptr);
 
 		if (not useDefaultWindowLoc)
@@ -83,7 +79,7 @@ namespace ArEngine2D
 		UpdateWindow(handle_);
 		Window::s_ActiveWindow = this;
 	}
-	auto Window::ProcessMessages() -> bool
+	auto Window::ProcessMessages() noexcept -> bool
 	{
 		MSG msg{};
 		while (PeekMessageW(&msg, handle_, 0U, 0U, PM_REMOVE))
@@ -94,7 +90,7 @@ namespace ArEngine2D
 
 		return IsWindow(handle_);
 	}
-	void Window::InputUpdate()
+	void Window::InputUpdate() noexcept
 	{
 		keyboard.FrameUpdate();
 		mouse.FrameUpdate();
@@ -137,7 +133,7 @@ namespace ArEngine2D
 		WNDCLASSEX clazz{};
 		clazz.cbSize = sizeof clazz;
 		clazz.hInstance = hInstance;
-		clazz.lpszClassName = Window::s_ClassName;
+		clazz.lpszClassName = Window::sc_ClassName;
 		clazz.cbClsExtra = {};
 		clazz.cbWndExtra = {};
 		clazz.hbrBackground = {};
@@ -146,7 +142,7 @@ namespace ArEngine2D
 		clazz.hIconSm = {};
 		clazz.lpfnWndProc = &Window::WinProc;
 		clazz.lpszMenuName = L"menu name";
-		clazz.style = Window::s_ClassStyle;
+		clazz.style = Window::sc_ClassStyle;
 
 		RegisterClassExW(&clazz);
 	}
