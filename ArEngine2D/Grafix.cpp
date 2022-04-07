@@ -39,19 +39,25 @@ namespace ArEngine2D {
 	void Grafix::DrawLine(Vec2 const& from, Vec2 const& to, ColorF const& color, float thick) noexcept
 	{
 		pSolidBrush_->SetColor(color.ToD2DColor());
+		BeginTransform();
 		pRenderTarget_->DrawLine(from.ToD2DPoint(), to.ToD2DPoint(), pSolidBrush_.Get(), thick);
+		EndTransform();
 	}
 	void Grafix::DrawEllipse(Vec2 const& loc, float rx, float ry, ColorF const& color, float thick) noexcept
 	{
 		pSolidBrush_->SetColor(color.ToD2DColor());
 		auto const elli{D2D1::Ellipse(loc.ToD2DPoint(), rx, ry)};
+		BeginTransform();
 		pRenderTarget_->DrawEllipse(elli, pSolidBrush_.Get(), thick);
+		EndTransform();
 	}
 	void Grafix::FillEllipse(Vec2 const& loc, float rx, float ry, ColorF const& color) noexcept
 	{
 		pSolidBrush_->SetColor(color.ToD2DColor());
 		auto const elli{D2D1::Ellipse(loc.ToD2DPoint(), rx, ry)};
+		BeginTransform();
 		pRenderTarget_->FillEllipse(elli, pSolidBrush_.Get());
+		EndTransform();
 	}
 	void Grafix::DrawCircle(Vec2 const& loc, float r, ColorF const& color, float thick) noexcept
 	{
@@ -65,13 +71,17 @@ namespace ArEngine2D {
 	{
 		pSolidBrush_->SetColor(color.ToD2DColor());
 		auto const rect{D2D1::RectF(topLeft.x, topLeft.y, botRight.x, botRight.y)};
+		BeginTransform();
 		pRenderTarget_->DrawRectangle(rect, pSolidBrush_.Get(), thick);
+		EndTransform();
 	}
 	void Grafix::FillRectangle(Vec2 const& topLeft, Vec2 const& botRight, ColorF const& color) noexcept
 	{
 		pSolidBrush_->SetColor(color.ToD2DColor());
 		auto const rect{D2D1::RectF(topLeft.x, topLeft.y, botRight.x, botRight.y)};
+		BeginTransform();
 		pRenderTarget_->FillRectangle(rect, pSolidBrush_.Get());
+		EndTransform();
 	}
 	void Grafix::DrawRectangle(Vec2 const& loc, float w, float h, ColorF const& color, float thick) noexcept
 	{
@@ -105,9 +115,9 @@ namespace ArEngine2D {
 				p->AddLine(p2);
 			}
 		)};
-		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Translation({loc.x, loc.y}));
+		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
 		pRenderTarget_->DrawGeometry(pGeometry.Get(), pSolidBrush_.Get(), thick);
-		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Identity());
+		EndTransform();
 	}
 	void Grafix::FillTriangle(Vec2 const& loc, Vec2 const& p0, Vec2 const& p1, Vec2 const& p2, ColorF const& color)
 	{
@@ -121,9 +131,9 @@ namespace ArEngine2D {
 				p->AddLine(p2);
 			}
 		)};
-		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Translation({loc.x, loc.y}));
+		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
 		pRenderTarget_->FillGeometry(pGeometry.Get(), pSolidBrush_.Get());
-		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Identity());
+		EndTransform();
 	}
 	void Grafix::DrawPolygon(Vec2 const& loc, std::vector<Vec2> const& vertices, ColorF const& color, float thick)
 	{
@@ -148,9 +158,9 @@ namespace ArEngine2D {
 				}
 			}
 		)};
-		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Translation({loc.x, loc.y}));
+		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
 		pRenderTarget_->DrawGeometry(pGeometry.Get(), pSolidBrush_.Get(), thick);
-		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Identity());
+		EndTransform();
 	}
 	void Grafix::FillPolygon(Vec2 const& loc, std::vector<Vec2> const& vertices, ColorF const& color)
 	{
@@ -175,18 +185,42 @@ namespace ArEngine2D {
 				}
 			}
 		)};
-		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Translation({loc.x, loc.y}));
+		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
 		pRenderTarget_->FillGeometry(pGeometry.Get(), pSolidBrush_.Get());
-		pRenderTarget_->SetTransform(D2D1::Matrix3x2F::Identity());
+		EndTransform();
 	}
 	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity, Transform transform)
 	{
 		D2D1_RECT_F const destRect{
 			0.f, 0.f, sprite.Width(), sprite.Height()
 		};
-		pRenderTarget_->SetTransform(transform.Matrix() * D2D1::Matrix3x2F::Translation(loc.x, loc.y));
+		BeginTransform(transform >> D2D1::Matrix3x2F::Translation(loc.x, loc.y));
 		pRenderTarget_->DrawBitmap(sprite.D2DPtr(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
-		pRenderTarget_->SetTransform(D2D1::IdentityMatrix());
+		EndTransform();
+	}
+	void Grafix::SetScreenTransform(Transform const& newTransform) noexcept
+	{
+		screenTransform_ = newTransform;
+	}
+	void Grafix::PushTransform(Transform const& newTransform) noexcept 
+	{
+		pushedTransform_.Append(newTransform);
+	}
+	void Grafix::ResetTransform()
+	{
+		pushedTransform_.Reset();
+	}
+	void Grafix::BeginTransform() noexcept
+	{
+		pRenderTarget_->SetTransform((pushedTransform_ >> screenTransform_).Matrix());
+	}
+	void Grafix::BeginTransform(Transform const& whatToAppend) noexcept
+	{
+		pRenderTarget_->SetTransform((whatToAppend >> pushedTransform_ >> screenTransform_).Matrix());
+	}
+	void Grafix::EndTransform() noexcept
+	{
+		pRenderTarget_->SetTransform(screenTransform_.Matrix());
 	}
 	bool Grafix::IsInitialized() const noexcept
 	{

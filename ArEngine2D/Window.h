@@ -44,7 +44,7 @@ namespace ArEngine2D {
 		 * @brief updates the title text if it was changed (through SetTitle).
 		 * @return true if the update was successful, false otherwise.
 		*/
-		bool UpdateTitle() noexcept;
+		void UpdateTitle() noexcept;
 
 	protected:
 		void Initialize();

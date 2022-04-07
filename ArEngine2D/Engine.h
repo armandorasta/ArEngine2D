@@ -44,12 +44,17 @@ namespace ArEngine2D {
 		/**
 		 * @brief a handle to all the keyboard input.
 		*/
-		Keyboard const& keyboard{window_.keyboard};
+		Keyboard& keyboard{window_.keyboard};
 
 		/**
 		 * @brief a handle to all the mouse input.
 		*/
-		Mouse const& mouse{window_.mouse};
+		Mouse& mouse{window_.mouse};
+
+		/**
+		 * @brief a handle to all window related functions.
+		*/
+		Window& window{window_};
 
 	private:
 		Window window_;

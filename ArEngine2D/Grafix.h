@@ -84,6 +84,29 @@ namespace ArEngine2D {
 
 		void DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f, Transform transform = Transform{});
 
+	public:
+
+		/**
+		 * @brief this will set the new transform that the system is going to 
+		 *		  consider "default" from now on.
+		 * @param newTransform => the new default transform.
+		*/
+		void SetScreenTransform(Transform const& newTransform) noexcept;
+
+		/**
+		 * @brief this will push a transform (multiply a matrix) to the current 
+		 *		  transforms pushed before. calling Reset transform undoes all 
+		 *		  all of them, and resets back to the screen transform (can be
+		 *		  be changed using SetScreenTransform).
+		 * @param newTransform => the new transform to be pushed.
+		*/
+		void PushTransform(Transform const& newTransform) noexcept;
+
+		/**
+		 * @brief sets the transform back to the screen transform.
+		*/
+		void ResetTransform();
+
 	private:
 
 		template <std::invocable<ID2D1GeometrySink*> Callable>
@@ -100,10 +123,21 @@ namespace ArEngine2D {
 			return pGeometry;
 		}
 
+		// called before every render target draw call. 
+		// this should probably take a callable as a paramter but, 
+		// I really hate templates.
+		void BeginTransform() noexcept;
+		void BeginTransform(Transform const& whatToAppend) noexcept;
+		// called after every render target draw call.
+		void EndTransform() noexcept;
+		// will be optimized away.
 		bool IsInitialized() const noexcept;
 
 	private:
+		// actual width of the screen
 		float width_;
+
+		// actual height of the screen
 		float height_;
 
 		Details::Ptr<ID2D1HwndRenderTarget> pRenderTarget_;
@@ -111,5 +145,13 @@ namespace ArEngine2D {
 
 		// simple shapes
 		Details::Ptr<ID2D1SolidColorBrush> pSolidBrush_;
+
+		// calling ResetTransform will set it to this.
+		Transform screenTransform_{};
+
+		// extra transformations which can be used for drawing very specific
+		// things in the scene. saves me from added 10 billion more overloads 
+		// to the drawing rootines.
+		Transform pushedTransform_{};
 	};
 }

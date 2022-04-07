@@ -18,6 +18,8 @@ namespace ArEngine2D {
 		self& operator=(self const& that)	= default;
 		self& operator=(self&& that)		= default;
 
+		Transform(matto const& matrix) noexcept;
+
 	public:
 
 		self& Translate(Vec2 const& myVec) noexcept;
@@ -26,6 +28,18 @@ namespace ArEngine2D {
 		self& Rotate(float angle, Vec2 const& myCenter = { }) noexcept;
 		self& Reset() noexcept;
 		self& Invert() noexcept;
+		self Inverted() const noexcept;
+		self& Set(matto const& matrix) noexcept;
+		self& Append(matto const& matrix) noexcept;
+		self& Append(self const& that) noexcept;
+		self& Prepend(matto const& matrix) noexcept;
+		self& Prepend(self const& that) noexcept;
+
+	public:
+
+		self operator>>(self const& rhs) const noexcept;
+		Vec2 operator()(Vec2 const& what) const noexcept;
+		bool operator==(self const& rhs) const noexcept;
 
 	public:
 

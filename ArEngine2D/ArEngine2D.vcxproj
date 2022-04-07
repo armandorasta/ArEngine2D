@@ -170,6 +170,7 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Testing\ArTest20.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Util.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Grafix.cpp" />
     <ClCompile Include="IEngineError.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="Window.cpp" />

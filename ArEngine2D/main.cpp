@@ -17,20 +17,40 @@ namespace User {
 
 		void OnUserCreate() override
 		{
+			sprite.Initialize(L"MyPNG.png");
 		}
 
 		void OnUserUpdate(float dt) override
 		{
+			mouse.ForEachWheel([&](engine::Mouse::WheelEvent e) {
+				if (e.IsDown())
+				{
+					angle += 10 * dt;
+				}
+				else
+				{
+					angle -= 10 * dt;
+				}
+			});
 		}
 
 		void OnUserDraw(engine::Grafix& gfx) override
 		{
-			gfx.ClearScreen(engine::Colors::SANDY_BROWN);
+			gfx.SetScreenTransform(engine::Transform{}.Translate({100.f, 0.f}));
+			gfx.ClearScreen();
+			gfx.PushTransform(engine::Transform{}.Rotate(angle).Scale(.5f));
+			gfx.PushTransform(engine::Transform{}.Translate(mouse.loc));
+			gfx.DrawRectangleCenter({}, 500.f, 400.f, engine::Colors::MEDIUM_SEA_GREEN);
+			gfx.ResetTransform();
 		}
+
+	private:
+		float angle{};
+		engine::Sprite sprite{};
 	};
 }
 
-int main() 
+INT WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PSTR, _In_ INT)
 {
 	try
 	{

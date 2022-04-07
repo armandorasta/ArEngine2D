@@ -5,6 +5,9 @@ namespace ArEngine2D {
 	{ 
 		Reset(); 
 	}
+	Transform::Transform(matto const& matrix) noexcept
+		: mat_{matrix}
+	{}
 	Transform::self& Transform::Translate(Vec2 const& myVec) noexcept
 	{
 		mat_ = mat_ * matto::Translation(myVec.x, myVec.y);
@@ -34,6 +37,53 @@ namespace ArEngine2D {
 		assert(IsInvertible() && "Tried inverting an uninvertible Transform.");
 		mat_.Invert();
 		return *this;
+	}
+	Transform::self Transform::Inverted() const noexcept
+	{
+		auto t{*this};
+		t.Invert();
+		return t;
+	}
+	Transform::self& Transform::Set(matto const& matrix) noexcept
+	{
+		mat_ = matrix;
+		return *this;
+	}
+	Transform::self& Transform::Append(matto const& matrix) noexcept
+	{
+		mat_ = mat_ * matrix;
+		return *this;
+	}
+	Transform::self& Transform::Append(self const& that) noexcept
+	{
+		return Append(that.Matrix());
+	}
+	Transform::self& Transform::Prepend(matto const& matrix) noexcept
+	{
+		mat_ = matrix * mat_;
+		return *this;
+	}
+	Transform::self& Transform::Prepend(self const& that) noexcept
+	{
+		return Prepend(that.mat_);
+	}
+	Transform::self Transform::operator>>(self const& rhs) const noexcept
+	{
+		return Transform{mat_ * rhs.mat_};
+		return *this;
+	}
+	Vec2 Transform::operator()(Vec2 const& what) const noexcept
+	{
+		return mat_.TransformPoint(what.ToD2DPoint());
+	}
+	bool Transform::operator==(self const& rhs) const noexcept
+	{
+		auto const& omat{rhs.mat_};
+		return {
+			mat_._11 == omat._11 and mat_._12 == omat._12 and
+			mat_._21 == omat._21 and mat_._22 == omat._22 and
+			mat_._31 == omat._31 and mat_._32 == omat._32
+		};
 	}
 	bool Transform::IsInvertible() const noexcept
 	{ 

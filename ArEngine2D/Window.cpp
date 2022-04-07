@@ -23,9 +23,10 @@ namespace ArEngine2D
 			UnregisterClassW(sc_ClassName, GetModuleHandleA(nullptr));
 		}
 	}
-	bool Window::UpdateTitle() noexcept
+	void Window::UpdateTitle() noexcept
 	{
-		return SetWindowTextA(handle_, title_.data());
+		// may fail yes but, I have never had it fail on me.
+		SetWindowTextA(handle_, title_.data());
 	}
 	void Window::Initialize()
 	{
