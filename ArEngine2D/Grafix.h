@@ -82,28 +82,22 @@ namespace ArEngine2D {
 			*/
 		}
 
-		void DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f, Transform transform = Transform{});
+		void DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f);
+		void DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f);
+		void DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity = 1.f);
 
 	public:
 
 		/**
-		 * @brief this will set the new transform that the system is going to 
-		 *		  consider "default" from now on.
-		 * @param newTransform => the new default transform.
-		*/
-		void SetScreenTransform(Transform const& newTransform) noexcept;
-
-		/**
 		 * @brief this will push a transform (multiply a matrix) to the current 
 		 *		  transforms pushed before. calling Reset transform undoes all 
-		 *		  all of them, and resets back to the screen transform (can be
-		 *		  be changed using SetScreenTransform).
+		 *		  all of them.
 		 * @param newTransform => the new transform to be pushed.
 		*/
 		void PushTransform(Transform const& newTransform) noexcept;
 
 		/**
-		 * @brief sets the transform back to the screen transform.
+		 * @brief sets the transform back to the identity.
 		*/
 		void ResetTransform();
 
@@ -145,9 +139,6 @@ namespace ArEngine2D {
 
 		// simple shapes
 		Details::Ptr<ID2D1SolidColorBrush> pSolidBrush_;
-
-		// calling ResetTransform will set it to this.
-		Transform screenTransform_{};
 
 		// extra transformations which can be used for drawing very specific
 		// things in the scene. saves me from added 10 billion more overloads 

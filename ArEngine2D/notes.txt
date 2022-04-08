@@ -2,6 +2,8 @@
 	* handle ID2D1HwndRenderTarget::EndDraw errors
 
 * graphics:
+	* rethink have a screen transform and a pushed transform rather than a single global transform?
+	* make a Rectangle class.
 	* minimize the number of transformations in the Grafix class by using lazy eval if possible.
 	* add SpriteSheet for animations and efficient multiple sprite handling.
 	* make the engine into a static library.

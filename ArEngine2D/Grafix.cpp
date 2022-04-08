@@ -189,18 +189,31 @@ namespace ArEngine2D {
 		pRenderTarget_->FillGeometry(pGeometry.Get(), pSolidBrush_.Get());
 		EndTransform();
 	}
-	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity, Transform transform)
+	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity)
 	{
 		D2D1_RECT_F const destRect{
 			0.f, 0.f, sprite.Width(), sprite.Height()
 		};
-		BeginTransform(transform >> D2D1::Matrix3x2F::Translation(loc.x, loc.y));
+		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
 		pRenderTarget_->DrawBitmap(sprite.D2DPtr(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
 		EndTransform();
 	}
-	void Grafix::SetScreenTransform(Transform const& newTransform) noexcept
+	void Grafix::DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity)
 	{
-		screenTransform_ = newTransform;
+		auto const [w, h] {sprite.Size()};
+		D2D1_RECT_F const destRect{0.f, 0.f, w, h};
+		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x - w * 0.5f, loc.y - h * 0.5f));
+		pRenderTarget_->DrawBitmap(sprite.D2DPtr(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+		EndTransform();
+	}
+	void Grafix::DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity)
+	{
+		D2D1_RECT_F const destRect{
+			0.f, 0.f, rect.right - rect.left, rect.bottom - rect.top
+		}; 
+		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
+		pRenderTarget_->DrawBitmap(sprite.D2DPtr(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, rect);
+		EndTransform();
 	}
 	void Grafix::PushTransform(Transform const& newTransform) noexcept 
 	{
@@ -212,15 +225,18 @@ namespace ArEngine2D {
 	}
 	void Grafix::BeginTransform() noexcept
 	{
-		pRenderTarget_->SetTransform((pushedTransform_ >> screenTransform_).Matrix());
+		pRenderTarget_->SetTransform(pushedTransform_.Matrix());
 	}
 	void Grafix::BeginTransform(Transform const& whatToAppend) noexcept
 	{
-		pRenderTarget_->SetTransform((whatToAppend >> pushedTransform_ >> screenTransform_).Matrix());
+		pRenderTarget_->SetTransform((whatToAppend >> pushedTransform_).Matrix());
 	}
 	void Grafix::EndTransform() noexcept
 	{
-		pRenderTarget_->SetTransform(screenTransform_.Matrix());
+		// this assumes that some drawing rootines do not use BeginTransform,
+		// even tho that's not the case at the moment but, I don't want to lose
+		// my mind when I add something later, and forget this function even exists.
+		pRenderTarget_->SetTransform(D2D1::IdentityMatrix());
 	}
 	bool Grafix::IsInitialized() const noexcept
 	{

@@ -70,7 +70,6 @@ namespace ArEngine2D {
 	Transform::self Transform::operator>>(self const& rhs) const noexcept
 	{
 		return Transform{mat_ * rhs.mat_};
-		return *this;
 	}
 	Vec2 Transform::operator()(Vec2 const& what) const noexcept
 	{

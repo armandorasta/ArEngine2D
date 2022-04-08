@@ -36,10 +36,13 @@ namespace User {
 
 		void OnUserDraw(engine::Grafix& gfx) override
 		{
-			gfx.SetScreenTransform(engine::Transform{}.Translate({100.f, 0.f}));
 			gfx.ClearScreen();
-			gfx.PushTransform(engine::Transform{}.Rotate(angle).Scale(.5f));
-			gfx.PushTransform(engine::Transform{}.Translate(mouse.loc));
+			gfx.PushTransform(engine::Transform{}
+				.Rotate(angle)
+				.Scale(.5f)
+				.Translate(mouse.loc)
+				.Translate({100.f, 0.f}));
+
 			gfx.DrawRectangleCenter({}, 500.f, 400.f, engine::Colors::MEDIUM_SEA_GREEN);
 			gfx.ResetTransform();
 		}
