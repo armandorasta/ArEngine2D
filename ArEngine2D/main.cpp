@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 namespace User {
-	namespace engine = ArEngine2D;
+	using namespace ArEngine2D;
 	class MyEngine : public ArEngine2D::Engine
 	{
 	private:
@@ -17,39 +17,32 @@ namespace User {
 
 		void OnUserCreate() override
 		{
-			sprite.Initialize(L"MyPNG.png");
+			sprite.Initialize(L"Resources\\Ball.png", 32.f, 32.f, 0, 0.1f);
 		}
 
 		void OnUserUpdate(float dt) override
 		{
-			mouse.ForEachWheel([&](engine::Mouse::WheelEvent e) {
-				if (e.IsDown())
-				{
-					angle += 10 * dt;
-				}
-				else
-				{
-					angle -= 10 * dt;
-				}
+			mouse.ForEachWheel([&](Mouse::WheelEvent e) {
+				if (e.IsUp())
+					sprite.SetAnimationSpeed(2.f);
+				else			
+					sprite.SetAnimationSpeed(.5f);
 			});
+			sprite.Update(dt);
 		}
 
-		void OnUserDraw(engine::Grafix& gfx) override
+		void OnUserDraw(Grafix& gfx) override
 		{
 			gfx.ClearScreen();
-			gfx.PushTransform(engine::Transform{}
-				.Rotate(angle)
-				.Scale(.5f)
-				.Translate(mouse.loc)
-				.Translate({100.f, 0.f}));
-
-			gfx.DrawRectangleCenter({}, 500.f, 400.f, engine::Colors::MEDIUM_SEA_GREEN);
+			gfx.PushTransform(Transform{}.Scale(5.f).Translate(mouse.loc));
+			gfx.DrawAnimationSpriteSheet({}, sprite);
 			gfx.ResetTransform();
 		}
 
 	private:
+		float fCounter{};
 		float angle{};
-		engine::Sprite sprite{};
+		AnimationSpriteSheet sprite{};
 	};
 }
 

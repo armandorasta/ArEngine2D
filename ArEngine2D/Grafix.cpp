@@ -195,7 +195,7 @@ namespace ArEngine2D {
 			0.f, 0.f, sprite.Width(), sprite.Height()
 		};
 		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
-		pRenderTarget_->DrawBitmap(sprite.D2DPtr(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+		pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
 		EndTransform();
 	}
 	void Grafix::DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity)
@@ -203,7 +203,7 @@ namespace ArEngine2D {
 		auto const [w, h] {sprite.Size()};
 		D2D1_RECT_F const destRect{0.f, 0.f, w, h};
 		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x - w * 0.5f, loc.y - h * 0.5f));
-		pRenderTarget_->DrawBitmap(sprite.D2DPtr(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+		pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
 		EndTransform();
 	}
 	void Grafix::DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity)
@@ -212,8 +212,16 @@ namespace ArEngine2D {
 			0.f, 0.f, rect.right - rect.left, rect.bottom - rect.top
 		}; 
 		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
-		pRenderTarget_->DrawBitmap(sprite.D2DPtr(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, rect);
+		pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, rect);
 		EndTransform();
+	}
+	void Grafix::DrawSpriteSheet(Vec2 const& loc, SpriteSheet const& sheet, std::uint32_t frameNumber, float opacity)
+	{
+		DrawSpriteRect(loc, sheet, sheet.FrameRectF(frameNumber), opacity);
+	}
+	void Grafix::DrawAnimationSpriteSheet(Vec2 const& loc, AnimationSpriteSheet const& sheet, float opacity)
+	{
+		DrawSpriteRect(loc, sheet, sheet.FrameRectF(sheet.CurrFrame()), opacity);
 	}
 	void Grafix::PushTransform(Transform const& newTransform) noexcept 
 	{

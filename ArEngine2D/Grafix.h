@@ -85,6 +85,8 @@ namespace ArEngine2D {
 		void DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f);
 		void DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f);
 		void DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity = 1.f);
+		void DrawSpriteSheet(Vec2 const& loc, SpriteSheet const& sheet, std::uint32_t frameNumber, float opacity = 1.f);
+		void DrawAnimationSpriteSheet(Vec2 const& loc, AnimationSpriteSheet const& sheet, float opacity = 1.f);
 
 	public:
 

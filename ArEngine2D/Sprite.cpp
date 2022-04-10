@@ -11,6 +11,16 @@ namespace ArEngine2D {
 	{
 		MoveFromSprite(that);
 	}
+	Sprite::self& Sprite::operator=(self const& rhs)
+	{
+		CopyFromSprite(rhs);
+		return *this;
+	}
+	Sprite::self& Sprite::operator=(self&& rhs) noexcept
+	{
+		MoveFromSprite(rhs);
+		return *this;
+	}
 	void Sprite::Initialize(std::wstring_view fileName)
 	{
 		// Safety checks so, I don't get confused with a nullptr runtime exception
@@ -43,18 +53,23 @@ namespace ArEngine2D {
 	}
 	void Sprite::CopyFromMemory(void const* pData, D2D1_RECT_U const& whereTo, std::size_t pitch)
 	{
-		IntializationCheck();
+		InitializationCheck();
 		pImage_->CopyFromMemory(&whereTo, pData, static_cast<UINT32>(pitch));
+
+		// size may have changed.
+		auto const size{pImage_->GetSize()};
+		width_ = size.width;
+		height_ = size.height;
 	}
-	void Sprite::CopyFromSprite(Sprite const& that, D2D1_RECT_U const& from, D2D1_POINT_2U const& whereTo)
+	void Sprite::CopyFromSpriteRect(Sprite const& that, D2D1_RECT_U const& from, D2D1_POINT_2U const& whereTo)
 	{
-		IntializationCheck();
-		pImage_->CopyFromBitmap(&whereTo, that.D2DPtr(), &from);
+		InitializationCheck();
+		pImage_->CopyFromBitmap(&whereTo, that.pImage_.Get(), &from);
 	}
 	void Sprite::CopyFromSprite(Sprite const& that)
 	{
 		assert(that.IsInitialized() && "Tried to copy from an uninitialized Sprite");
-		CopyFromSprite(that, that.RectU(), {});
+		CopyFromSpriteRect(that, that.RectU(), {});
 		this->width_ = that.width_;
 		this->height_ = that.height_;
 	}
@@ -78,42 +93,42 @@ namespace ArEngine2D {
 	}
 	D2D1_SIZE_F Sprite::Size() const
 	{
-		IntializationCheck();
+		InitializationCheck();
 		return {Width(), Height()};
 	}
 	float Sprite::Width() const
 	{
-		IntializationCheck();
+		InitializationCheck();
 		return width_;
 	}
 	float Sprite::Height() const
 	{
-		IntializationCheck();
+		InitializationCheck();
 		return height_;
 	}
-	ID2D1Bitmap* Sprite::D2DPtr() const
+	Details::Ptr<ID2D1Bitmap> Sprite::D2DPtr() const
 	{
-		IntializationCheck();
-		return pImage_.Get();
+		InitializationCheck();
+		return pImage_;
 	}
 	D2D1_PIXEL_FORMAT Sprite::PixelFormat() const
 	{
-		IntializationCheck();
+		InitializationCheck();
 		return pImage_->GetPixelFormat();
 	}
 	D2D1_SIZE_U Sprite::PixelSize() const
 	{
-		IntializationCheck();
+		InitializationCheck();
 		return pImage_->GetPixelSize();
 	}
 	D2D1_RECT_U Sprite::RectU() const
 	{
-		IntializationCheck();
+		InitializationCheck();
 		return {0U, 0U, static_cast<UINT32>(Width()), static_cast<UINT32>(Height())};
 	}
 	D2D1_RECT_F Sprite::RectF() const
 	{
-		IntializationCheck();
+		InitializationCheck();
 		return {0.f, 0.f, Width(), Height()};
 	}
 	void Sprite::InitializeMinorMembers()
@@ -126,8 +141,130 @@ namespace ArEngine2D {
 	{
 		return pImage_;
 	}
-	void Sprite::IntializationCheck() const noexcept
+	void Sprite::InitializationCheck() const noexcept
 	{
 		assert(IsInitialized() && "Use of uninitialized Sprite");
 	}
-}
+	void SpriteSheet::Initialize(std::wstring_view fileName, float frameWidth, float frameHeight, std::uint32_t frameCount)
+	{
+		base::Initialize(fileName);
+		if (std::fmod(Width(), frameWidth) or
+			std::fmod(Height(), frameHeight))
+		{
+			throw EngineError{"Invalid SpriteSheet dimensions passed; sheet width must be a multiple of frame width"};
+		}
+		this->frameWidth_  = frameWidth;
+		this->frameHeight_ = frameHeight;
+		this->frameCount_  = frameCount_;
+		InitializeMinorMembers();
+	}
+	float SpriteSheet::FrameWidth() const
+	{
+		InitializationCheck();
+		return frameWidth_;
+	}
+	float SpriteSheet::FrameHeight() const
+	{
+		InitializationCheck();
+		return frameHeight_;
+	}
+	std::uint32_t SpriteSheet::RowFrameCount() const
+	{
+		InitializationCheck();
+		return rowFrameCount_;
+	}
+	std::uint32_t SpriteSheet::ColFrameCount() const
+	{
+		InitializationCheck();
+		return colFrameCount_;
+	}
+	std::uint32_t SpriteSheet::FrameCount() const
+	{
+		return frameCount_;
+	}
+	D2D1_SIZE_F SpriteSheet::FrameSize() const
+	{
+		InitializationCheck();
+		return {FrameWidth(), FrameHeight()};
+	}
+	D2D1_RECT_F SpriteSheet::FrameRectF(std::uint32_t number) const
+	{
+		InitializationCheck();
+		assert(number < (colFrameCount_* rowFrameCount_) && "Invalid frame number");
+
+		auto const left{(number % rowFrameCount_)};
+		auto const top{(number / rowFrameCount_)};
+		return {left * frameWidth_, top * frameHeight_, (left + 1) * frameWidth_, (top + 1) * frameHeight_};
+	}
+	D2D1_RECT_U SpriteSheet::FrameRectU(std::uint32_t number) const
+	{
+		InitializationCheck();
+		auto const rectF{FrameRectF(number)};
+		return {
+			static_cast<UINT32>(rectF.left),
+			static_cast<UINT32>(rectF.top),
+			static_cast<UINT32>(rectF.right),
+			static_cast<UINT32>(rectF.bottom),
+		};
+	}
+	void SpriteSheet::InitializeMinorMembers()
+	{
+		rowFrameCount_ = static_cast<std::uint32_t>(Width() / FrameWidth());
+		colFrameCount_ = static_cast<std::uint32_t>(Height() / FrameHeight());
+		if (not frameCount_)
+		{
+			frameCount_ = rowFrameCount_ * colFrameCount_;
+		}
+	}
+	void AnimationSpriteSheet::Initialize(std::wstring_view fileName, float frameWidth, float frameHeight, std::uint32_t frameCount,
+		std::chrono::duration<float> frameTime)
+	{
+		base::Initialize(fileName, frameWidth, frameHeight, frameCount);
+		this->frameTime_ = frameTime;
+	}
+	void AnimationSpriteSheet::Initialize(std::wstring_view fileName, float frameWidth, float frameHeight, std::uint32_t frameCount,
+		float frameTimeSeconds)
+	{
+		using namespace std::chrono_literals;
+		Initialize(fileName, frameWidth, frameHeight, frameCount, frameTimeSeconds * 1s);
+	}
+	void AnimationSpriteSheet::Update(std::chrono::duration<float> dt)
+	{
+		currTime_ += dt;
+		if (currTime_ >= frameTime_ * FrameCount()) // reached the last frame?
+		{
+			currTime_ = {};
+		}
+	}
+	void AnimationSpriteSheet::Update(float dt)
+	{
+		using namespace std::chrono_literals;
+		Update(dt * 1s);
+	}
+	void AnimationSpriteSheet::SetFrameTime(std::chrono::duration<float> newTime) noexcept
+	{
+		assert(newTime.count() >= 0.f && "Invalid call to AnimationSpriteSheet::SetFrameTime");
+		frameTime_ = newTime;
+	}
+	void AnimationSpriteSheet::SetFrameTime(float newTimeInSeconds) noexcept
+	{
+		using namespace std::chrono_literals;
+		SetFrameTime(newTimeInSeconds * 1s);
+	}
+	void AnimationSpriteSheet::SetAnimationSpeed(float perncent) noexcept
+	{
+		SetFrameTime(frameTime_ * perncent);
+	}
+	std::chrono::duration<float> AnimationSpriteSheet::FrameTime() const noexcept
+	{
+		return frameTime_;
+	}
+	std::chrono::duration<float> AnimationSpriteSheet::CurrTime() const noexcept
+	{
+		return currTime_;
+	}
+	std::uint32_t AnimationSpriteSheet::CurrFrame() const noexcept
+	{
+		return static_cast<std::uint32_t>(currTime_.count() / frameTime_.count());
+	}
+	}
