@@ -28,6 +28,13 @@ namespace User {
 				else			
 					sprite.SetAnimationSpeed(.5f);
 			});
+
+			if (keyboard(Keys::SPACE).IsPressed())
+			{
+				sprite.SetCurrFrame(3U);
+				sprite.ToggleAnimation();
+			}
+
 			sprite.Update(dt);
 		}
 

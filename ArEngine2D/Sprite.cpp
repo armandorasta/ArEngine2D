@@ -228,22 +228,41 @@ namespace ArEngine2D {
 		using namespace std::chrono_literals;
 		Initialize(fileName, frameWidth, frameHeight, frameCount, frameTimeSeconds * 1s);
 	}
-	void AnimationSpriteSheet::Update(std::chrono::duration<float> dt)
+	void AnimationSpriteSheet::Update(std::chrono::duration<float> dt) noexcept
 	{
+		if (bStop_)
+		{
+			return;
+		}
 		currTime_ += dt;
 		if (currTime_ >= frameTime_ * FrameCount()) // reached the last frame?
 		{
 			currTime_ = {};
 		}
 	}
-	void AnimationSpriteSheet::Update(float dt)
+	void AnimationSpriteSheet::Update(float dt) noexcept
 	{
 		using namespace std::chrono_literals;
 		Update(dt * 1s);
 	}
+	void AnimationSpriteSheet::PauseAnimation() noexcept
+	{
+		bStop_ = true;
+	}
+	void AnimationSpriteSheet::ResumeAnimation() noexcept
+	{
+		bStop_ = false;
+	}
+	void AnimationSpriteSheet::ToggleAnimation() noexcept
+	{
+		bStop_ ^= 1;
+	}
 	void AnimationSpriteSheet::SetFrameTime(std::chrono::duration<float> newTime) noexcept
 	{
-		assert(newTime.count() >= 0.f && "Invalid call to AnimationSpriteSheet::SetFrameTime");
+		auto const count{newTime.count()};
+		assert(count >= 0.f && "Invalid call to AnimationSpriteSheet::SetFrameTime");
+		// so the animation does not randomly change frames.
+		currTime_ *= newTime.count() / frameTime_.count(); 
 		frameTime_ = newTime;
 	}
 	void AnimationSpriteSheet::SetFrameTime(float newTimeInSeconds) noexcept
@@ -254,6 +273,11 @@ namespace ArEngine2D {
 	void AnimationSpriteSheet::SetAnimationSpeed(float perncent) noexcept
 	{
 		SetFrameTime(frameTime_ * perncent);
+	}
+	void AnimationSpriteSheet::SetCurrFrame(std::uint32_t id) noexcept
+	{
+		assert(id < FrameCount() && "Invalid call to AnimationSpriteSheet::SetCurrFrame");
+		currTime_ = id * frameTime_;
 	}
 	std::chrono::duration<float> AnimationSpriteSheet::FrameTime() const noexcept
 	{
@@ -266,5 +290,9 @@ namespace ArEngine2D {
 	std::uint32_t AnimationSpriteSheet::CurrFrame() const noexcept
 	{
 		return static_cast<std::uint32_t>(currTime_.count() / frameTime_.count());
+	}
+	bool AnimationSpriteSheet::IsAnimating() const noexcept
+	{
+		return not bStop_;
 	}
 	}

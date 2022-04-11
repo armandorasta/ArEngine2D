@@ -275,41 +275,90 @@ namespace ArEngine2D {
 
 		/**
 		 * @brief basically adds dt to an internal timer.
-		 * @param dt => the amount of time "elapsed" since the last call.
+		 *		  this function does nothing when the animation is paused.
+		 *		  users should not use this function to manipulate animation speed.
+		 * @param dt => the amount of time elapsed since the last call.
 		*/
-		void Update(std::chrono::duration<float> dt);
+		void Update(std::chrono::duration<float> dt) noexcept;
 
 		/**
 		 * @brief basically adds dt to an internal timer.
 		 * @param dt => the amount of time "elapsed" since the last call.
 		*/
-		void Update(float dt);
+		void Update(float dt) noexcept;
+
+		/**
+		 * @brief stops the sprite from animating temporarily. 
+		 *		  this function has nothing to do with SetFrameTime.
+		 *		  undo with ResumeAnimation.
+		*/
+		void PauseAnimation() noexcept;
+
+		/**
+		 * @brief lets the sprite animate once again. 
+		 *		  this function has nothing to do with SetFrameTime.
+		 *		  undo with PauseAnimation.
+		*/
+		void ResumeAnimation() noexcept;
+
+		/**
+		 * @brief alternates between resuming and pausing the animation.
+		*/
+		void ToggleAnimation() noexcept;
 
 	public:
 
 		/**
 		 * @brief use to change the speed of the animation.
+		 *		  users should not use this function to stop the animation.
 		 * @param newTime => the new time a single frame takes on screen.
 		*/
 		void SetFrameTime(std::chrono::duration<float> newTime) noexcept;
 
 		/**
 		 * @brief use to change the speed of the animation.
+		 *		  users should not use this function to stop the animation.
 		 * @param newTimeInSeconds => the new time a single frame takes on screen.
 		*/
 		void SetFrameTime(float newTimeInSeconds) noexcept;
 
 		/**
 		 * @brief changes the speed of the animation.
+		 *		  users should not use this function to stop the animation.
 		 * @param perncent => the new speed will be (current_speed * percent).
 		*/
 		void SetAnimationSpeed(float perncent) noexcept;
 
+		/**
+		 * @brief calling this function with an out of bounds id is undefined behaviour.
+		 *		  users should not use this function to stop the animation.
+		 * @param id => the id of the frame to be set to.
+		*/
+		void SetCurrFrame(std::uint32_t id) noexcept;
+
+		/**
+		 * @return the amount of time a single frame takes on screen.
+		*/
 		std::chrono::duration<float> FrameTime() const noexcept;
+
+		/**
+		 * @return the duration between the start of the animation and the current state.
+		*/
 		std::chrono::duration<float> CurrTime() const noexcept;
+
+		/**
+		 * @return the id of the current frame.
+		*/
 		std::uint32_t CurrFrame() const noexcept;
 
+		/**
+		 * @return true if the animation is not paused, false otherwise.
+		*/
+		bool IsAnimating() const noexcept;
+
 	private:
+		// better than setting the frame time to infinity and having the sprite update constantly for no reason.
+		bool bStop_{};
 		std::chrono::duration<float> frameTime_{};
 		std::chrono::duration<float> currTime_{};
 	};
