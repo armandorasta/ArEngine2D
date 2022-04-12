@@ -17,7 +17,7 @@ namespace User {
 
 		void OnUserCreate() override
 		{
-			sprite.Initialize(L"Resources\\Ball.png", 32.f, 32.f, 0, 0.1f);
+			sprite.Initialize(L"Resources\\MyPNG.png", 32.f, 32.f, 0, 0.1f);
 		}
 
 		void OnUserUpdate(float dt) override
@@ -40,9 +40,20 @@ namespace User {
 
 		void OnUserDraw(Grafix& gfx) override
 		{
+			if (keyboard(Keys::TAB).IsPressed())
+			{
+				gfx.SetInterpolationMode(InterpolationMode::NEAREST_NEIGHBOR);
+			}
+			if (keyboard(Keys::SHIFT).IsPressed())
+			{
+				gfx.SetInterpolationMode(InterpolationMode::LINEAR);
+			}
+
 			gfx.ClearScreen();
-			gfx.PushTransform(Transform{}.Scale(5.f).Translate(mouse.loc));
-			gfx.DrawAnimationSpriteSheet({}, sprite);
+			gfx.PushTransform(Transform{}.Scale(5.f).Rotate(1.f).Translate(mouse.loc));
+			//gfx.DrawAnimationSpriteSheet({}, sprite);
+			//gfx.DrawString({}, "my string", Colors::MEDIUM_SPRING_GREEN, 30.f);
+			gfx.DrawSpriteCenter({}, sprite);
 			gfx.ResetTransform();
 		}
 

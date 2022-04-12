@@ -22,6 +22,11 @@ namespace ArEngine2D {
 		HANDLE_GRAPHICS_ERROR(pRenderTarget_->CreateSolidColorBrush(
 			{}, pSolidBrush_.GetAddressOf()
 		));
+
+		HANDLE_GRAPHICS_ERROR(DWriteCreateFactory(
+			DWRITE_FACTORY_TYPE_SHARED, __uuidof(pDWriteFactory_), &pDWriteFactory_
+		));
+		
 		Sprite::InternalInitialization(pRenderTarget_);
 	}
 	void Grafix::BeginDraw()
@@ -189,30 +194,49 @@ namespace ArEngine2D {
 		pRenderTarget_->FillGeometry(pGeometry.Get(), pSolidBrush_.Get());
 		EndTransform();
 	}
+	void Grafix::DrawString(Vec2 const& loc, std::string str, ColorF const& color, float size)
+	{
+		pSolidBrush_->SetColor(color);
+
+		Details::Ptr<IDWriteTextFormat> pFormat{ };
+		HANDLE_GRAPHICS_ERROR(pDWriteFactory_->CreateTextFormat(
+			L"Consolas", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL, size, L"", &pFormat
+		));
+
+		D2D1_RECT_F const rect{
+			loc.x,
+			loc.y,
+			std::numeric_limits<float>::infinity(),
+			std::numeric_limits<float>::infinity()
+		};
+		std::wstring const wstr{str.begin(), str.end()};
+
+		BeginTransform();
+		pRenderTarget_->DrawText(wstr.c_str(), static_cast<UINT32>(std::size(wstr)),
+			pFormat.Get(), rect, pSolidBrush_.Get());
+		EndTransform();
+	}
 	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity)
 	{
-		D2D1_RECT_F const destRect{
-			0.f, 0.f, sprite.Width(), sprite.Height()
-		};
-		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
-		pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
-		EndTransform();
+		DrawSpriteRect(loc, sprite, sprite.RectF(), opacity);
 	}
 	void Grafix::DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity)
 	{
 		auto const [w, h] {sprite.Size()};
-		D2D1_RECT_F const destRect{0.f, 0.f, w, h};
-		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x - w * 0.5f, loc.y - h * 0.5f));
-		pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
-		EndTransform();
+		DrawSprite({loc.x - w * 0.5f, loc.y - h * 0.5f}, sprite, opacity);
+		// D2D1_RECT_F const destRect{0.f, 0.f, w, h};
+		// BeginTransform(D2D1::Matrix3x2F::Translation(loc.x - w * 0.5f, loc.y - h * 0.5f));
+		// pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, interpolationMode_);
+		// EndTransform();
 	}
 	void Grafix::DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity)
 	{
 		D2D1_RECT_F const destRect{
-			0.f, 0.f, rect.right - rect.left, rect.bottom - rect.top
+			loc.x, loc.y, loc.x + (rect.right - rect.left), loc.y + (rect.bottom - rect.top)
 		}; 
-		BeginTransform(D2D1::Matrix3x2F::Translation(loc.x, loc.y));
-		pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, rect);
+		BeginTransform();
+		pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, interpolationMode_, rect);
 		EndTransform();
 	}
 	void Grafix::DrawSpriteSheet(Vec2 const& loc, SpriteSheet const& sheet, std::uint32_t frameNumber, float opacity)
@@ -227,9 +251,23 @@ namespace ArEngine2D {
 	{
 		pushedTransform_.Append(newTransform);
 	}
-	void Grafix::ResetTransform()
+	void Grafix::ResetTransform() noexcept
 	{
 		pushedTransform_.Reset();
+	}
+	void Grafix::SetInterpolationMode(InterpolationMode newMode)  
+	{
+		switch (newMode) 
+		{
+		case InterpolationMode::LINEAR: 
+			interpolationMode_ = D2D1_BITMAP_INTERPOLATION_MODE_LINEAR;
+			break;
+		case InterpolationMode::NEAREST_NEIGHBOR: 
+			interpolationMode_ = D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+			break;
+		default:
+			throw EngineError{"Invalid InterpolationMode passed to Grafix::SetInterpolationMode"};
+		}
 	}
 	void Grafix::BeginTransform() noexcept
 	{

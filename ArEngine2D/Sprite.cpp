@@ -180,6 +180,7 @@ namespace ArEngine2D {
 	}
 	std::uint32_t SpriteSheet::FrameCount() const
 	{
+		InitializationCheck();
 		return frameCount_;
 	}
 	D2D1_SIZE_F SpriteSheet::FrameSize() const
@@ -230,14 +231,22 @@ namespace ArEngine2D {
 	}
 	void AnimationSpriteSheet::Update(std::chrono::duration<float> dt) noexcept
 	{
+		InitializationCheck();
 		if (bStop_)
 		{
 			return;
 		}
-		currTime_ += dt;
-		if (currTime_ >= frameTime_ * FrameCount()) // reached the last frame?
+		currTime_ += (1 - 2 * bReverse_) * dt;
+		auto const animationTime{frameTime_ * FrameCount()};
+		while (currTime_ >= animationTime) // no overflowing!
 		{
 			currTime_ = {};
+		}
+		while (currTime_ < std::chrono::duration<float>{0.f}) // or underflowing
+		{
+			// should not ever get below zero if not reversed.
+			assert(bReverse_ && "AnimationSpriteSheet has reac22hed an invalid state");
+			currTime_ += animationTime;
 		}
 	}
 	void AnimationSpriteSheet::Update(float dt) noexcept
@@ -247,18 +256,27 @@ namespace ArEngine2D {
 	}
 	void AnimationSpriteSheet::PauseAnimation() noexcept
 	{
+		InitializationCheck();
 		bStop_ = true;
 	}
 	void AnimationSpriteSheet::ResumeAnimation() noexcept
 	{
+		InitializationCheck();
 		bStop_ = false;
 	}
 	void AnimationSpriteSheet::ToggleAnimation() noexcept
 	{
+		InitializationCheck();
 		bStop_ ^= 1;
+	}
+	void AnimationSpriteSheet::ReverseAnimation() noexcept
+	{
+		InitializationCheck();
+		bReverse_ ^= 1;
 	}
 	void AnimationSpriteSheet::SetFrameTime(std::chrono::duration<float> newTime) noexcept
 	{
+		InitializationCheck();
 		auto const count{newTime.count()};
 		assert(count >= 0.f && "Invalid call to AnimationSpriteSheet::SetFrameTime");
 		// so the animation does not randomly change frames.
@@ -276,23 +294,28 @@ namespace ArEngine2D {
 	}
 	void AnimationSpriteSheet::SetCurrFrame(std::uint32_t id) noexcept
 	{
+		InitializationCheck();
 		assert(id < FrameCount() && "Invalid call to AnimationSpriteSheet::SetCurrFrame");
 		currTime_ = id * frameTime_;
 	}
 	std::chrono::duration<float> AnimationSpriteSheet::FrameTime() const noexcept
 	{
+		InitializationCheck();
 		return frameTime_;
 	}
 	std::chrono::duration<float> AnimationSpriteSheet::CurrTime() const noexcept
 	{
+		InitializationCheck();
 		return currTime_;
 	}
 	std::uint32_t AnimationSpriteSheet::CurrFrame() const noexcept
 	{
+		InitializationCheck();
 		return static_cast<std::uint32_t>(currTime_.count() / frameTime_.count());
 	}
 	bool AnimationSpriteSheet::IsAnimating() const noexcept
 	{
+		InitializationCheck();
 		return not bStop_;
 	}
 	}

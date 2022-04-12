@@ -43,6 +43,7 @@ namespace ArEngine2D {
 		void FillRectangle(Vec2 const& topLeft, Vec2 const& botRight, ColorF const& color) noexcept;
 		void DrawRectangle(Vec2 const& loc, float w, float h, ColorF const& color, float thick = 1.f) noexcept;
 		void FillRectangle(Vec2 const& loc, float w, float h, ColorF const& color) noexcept;
+		// what u get with transformations other than the identity is unspecified.
 		void DrawRectangleCenter(Vec2 const& loc, float w, float h, ColorF const& color, float thick = 1.f) noexcept;
 		void FillRectangleCenter(Vec2 const& loc, float w, float h, ColorF const& color) noexcept;
 
@@ -52,37 +53,10 @@ namespace ArEngine2D {
 		void DrawPolygon(Vec2 const& loc, std::vector<Vec2> const& vertices, ColorF const& color, float thick = 1.f);
 		void FillPolygon(Vec2 const& loc, std::vector<Vec2> const& vertices, ColorF const& color);
 
-		void DrawString(std::string str, Vec2 const& loc, ColorF const& color, float size, std::wstring fontName = L"Verdana") 
-		{
-			pSolidBrush_->SetColor(color);
-
-			Details::Ptr<IDWriteFactory> pDFactory{};
-			HANDLE_GRAPHICS_ERROR(DWriteCreateFactory(
-				DWRITE_FACTORY_TYPE_SHARED, __uuidof(pDFactory), &pDFactory
-			));
-
-			Details::Ptr<IDWriteTextFormat> pFormat{};
-			HANDLE_GRAPHICS_ERROR(pDFactory->CreateTextFormat(
-				fontName.data(), nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
-				DWRITE_FONT_STRETCH_NORMAL, size, L"", &pFormat
-			));
-			pFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-			pFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-
-			D2D1_RECT_F const rect{loc.x, loc.y , loc.x + size * 3.f * str.size(), loc.y + size * 3.f};
-			std::wstring const wstr{str.begin(), str.end()};
-
-			pRenderTarget_->DrawTextW(wstr.data(), static_cast<UINT32>(std::size(wstr)),
-				pFormat.Get(), rect, pSolidBrush_.Get());
-
-			/*
-			
-				TODO: fix this code (the text behaves strangely but, it does show up).
-			
-			*/
-		}
+		void DrawString(Vec2 const& loc, std::string str, ColorF const& color, float size);
 
 		void DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f);
+		// what u get with transformations other than the identity is unspecified.
 		void DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f);
 		void DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity = 1.f);
 		void DrawSpriteSheet(Vec2 const& loc, SpriteSheet const& sheet, std::uint32_t frameNumber, float opacity = 1.f);
@@ -101,7 +75,12 @@ namespace ArEngine2D {
 		/**
 		 * @brief sets the transform back to the identity.
 		*/
-		void ResetTransform();
+		void ResetTransform() noexcept;
+
+		/**
+		 * @param newMode the new interpolation mode used for sprites.
+		*/
+		void SetInterpolationMode(InterpolationMode newMode);
 
 	private:
 
@@ -141,6 +120,12 @@ namespace ArEngine2D {
 
 		// simple shapes
 		Details::Ptr<ID2D1SolidColorBrush> pSolidBrush_;
+
+		// for drawing strings (very inefficient!)
+		Details::Ptr<IDWriteFactory> pDWriteFactory_{};
+
+		// for sprites
+		D2D1_BITMAP_INTERPOLATION_MODE interpolationMode_{D2D1_BITMAP_INTERPOLATION_MODE_LINEAR};
 
 		// extra transformations which can be used for drawing very specific
 		// things in the scene. saves me from added 10 billion more overloads 

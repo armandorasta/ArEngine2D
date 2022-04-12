@@ -10,6 +10,12 @@
 #include <d2d1.h>
 
 namespace ArEngine2D {
+	enum class InterpolationMode : std::uint32_t
+	{
+		LINEAR,
+		NEAREST_NEIGHBOR
+	};
+
 	class Sprite
 	{ 
 	private:
@@ -289,14 +295,12 @@ namespace ArEngine2D {
 
 		/**
 		 * @brief stops the sprite from animating temporarily. 
-		 *		  this function has nothing to do with SetFrameTime.
 		 *		  undo with ResumeAnimation.
 		*/
 		void PauseAnimation() noexcept;
 
 		/**
 		 * @brief lets the sprite animate once again. 
-		 *		  this function has nothing to do with SetFrameTime.
 		 *		  undo with PauseAnimation.
 		*/
 		void ResumeAnimation() noexcept;
@@ -305,6 +309,12 @@ namespace ArEngine2D {
 		 * @brief alternates between resuming and pausing the animation.
 		*/
 		void ToggleAnimation() noexcept;
+
+		/**
+		 * @brief reverses the animation, undo with another call
+		 *		  to this same function. 
+		*/
+		void ReverseAnimation() noexcept;
 
 	public:
 
@@ -359,6 +369,7 @@ namespace ArEngine2D {
 	private:
 		// better than setting the frame time to infinity and having the sprite update constantly for no reason.
 		bool bStop_{};
+		bool bReverse_{};
 		std::chrono::duration<float> frameTime_{};
 		std::chrono::duration<float> currTime_{};
 	};

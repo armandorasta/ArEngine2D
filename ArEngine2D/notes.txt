@@ -1,8 +1,7 @@
 * error handling: 
-	* handle ID2D1HwndRenderTarget::EndDraw errors
+	* none.
 
 * graphics:
-	* add DrawString.
 	* minimize the number of transformations in the Grafix class by using lazy eval if possible.
 	* make the engine into a static library.
 	* try to learn gradiants and curves.
