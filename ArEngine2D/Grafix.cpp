@@ -194,6 +194,23 @@ namespace ArEngine2D {
 		pRenderTarget_->FillGeometry(pGeometry.Get(), pSolidBrush_.Get());
 		EndTransform();
 	}
+	void Grafix::DrawArrow(Vec2 const& from, Vec2 const& to, ColorF const& color, float thick)
+	{
+		constexpr auto MyMin{30.f};
+		constexpr auto MyRatio{0.05f};
+
+		auto const vNorm{Vec2::Subtract(to, from).Normalized()};
+		auto const vEast{vNorm.ClockwiseNormal()};
+		auto const vWest{-vEast};
+		auto const vSouthWest{(vWest - vNorm).Normalized()};
+		auto const vSouthEast{(vEast - vNorm).Normalized()};
+		auto const dist{Vec2::Dist(from, to)};
+		auto const legSize{std::max(MyRatio * dist, MyMin)};
+		
+		DrawLine(from, to, color, thick);
+		DrawLine(to, to + vSouthEast * legSize, color, thick);
+		DrawLine(to, to + vSouthWest * legSize, color, thick);
+	}
 	void Grafix::DrawString(Vec2 const& loc, std::string str, ColorF const& color, float size)
 	{
 		pSolidBrush_->SetColor(color);

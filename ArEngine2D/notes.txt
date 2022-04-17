@@ -2,6 +2,11 @@
 	* none.
 
 * graphics:
+	* make the keyboard and mouse detect double tabs of any key.
+	* change the initialization model from 
+		* (forced default contructor => Initialize)
+		* to
+		* (optional default constructor => move assignment)
 	* minimize the number of transformations in the Grafix class by using lazy eval if possible.
 	* make the engine into a static library.
 	* try to learn gradiants and curves.

@@ -4,6 +4,10 @@
 #include <format>
 
 namespace ArEngine2D {
+	float Vec2::Dist(cref lhs, cref rhs)
+	{
+		return std::sqrt(Dist2(lhs, rhs));
+	}
 	auto Vec2::Mag() const noexcept -> float
 	{ 
 		return std::sqrt(Mag2()); 

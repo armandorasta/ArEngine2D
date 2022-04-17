@@ -31,7 +31,7 @@ namespace ArEngine2D {
 		{ return {x, y}; }
 
 		/** 
-		* @brief creats a vector using a direction and a length.
+		 * @brief creats a vector using a direction and a length.
 		 * @param dir => the direction of the vector (angle in radians)
 		 * @param len => the length of the vector (defaults to 1)
 		 * @return <cos(dir), sin(dir)> * len
@@ -40,6 +40,31 @@ namespace ArEngine2D {
 		{
 			return self{DirectX::XMScalarCos(dir), DirectX::XMScalarSin(dir)} * len;
 		}
+
+		/**
+		 * @return the square distance between two vectors.
+		*/
+		constexpr static float Dist2(cref lhs, cref rhs)
+		{
+			return (lhs - rhs).Mag2();
+		}
+
+		/**
+		 * @return the distance between two vectors.
+		*/
+		static float Dist(cref lhs, cref rhs);
+
+		/**
+		 * @return rhs - lhs.
+		*/
+		static self Subtract(cref lhs, cref rhs)
+		{ return lhs - rhs; }
+
+		/**
+		 * @return rhs + lhs.
+		*/
+		static self Add(cref lhs, cref rhs)
+		{ return lhs + rhs; }
 
 	public:
 
@@ -87,6 +112,20 @@ namespace ArEngine2D {
 		 * @param angle => the angle (in rad) to rotate the vector by.
 		*/
 		void Rotate(float angle) noexcept;
+
+		/**
+		 * @brief this operation is much faster than a call to the Rotate function.
+		 * @return the current vector rotated perpendicularly counter clock-wise.
+		*/
+		self CounterClockwiseNormal() const noexcept
+		{ return {y, -x}; }
+
+		/**
+		 * @brief this operation is much faster than a call to the Rotate function.
+		 * @return the current vector rotated perpendicularly clock-wise.
+		*/
+		self ClockwiseNormal() const noexcept
+		{ return -CounterClockwiseNormal(); }
 
 		/**
 		 * @return "(x, y)"

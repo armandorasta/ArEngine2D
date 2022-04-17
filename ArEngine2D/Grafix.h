@@ -53,6 +53,8 @@ namespace ArEngine2D {
 		void DrawPolygon(Vec2 const& loc, std::vector<Vec2> const& vertices, ColorF const& color, float thick = 1.f);
 		void FillPolygon(Vec2 const& loc, std::vector<Vec2> const& vertices, ColorF const& color);
 
+		void DrawArrow(Vec2 const& from, Vec2 const& to, ColorF const& color, float thick = 1.f);
+
 		void DrawString(Vec2 const& loc, std::string str, ColorF const& color, float size);
 
 		void DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity = 1.f);

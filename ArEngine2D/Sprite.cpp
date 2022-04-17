@@ -1,6 +1,7 @@
 #include "Sprite.h"
 
 #include "IEngineError.h"
+#include <cassert>
 
 namespace ArEngine2D {
 	Sprite::Sprite(self const& that)
