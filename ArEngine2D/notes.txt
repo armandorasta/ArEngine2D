@@ -2,7 +2,8 @@
 	* none.
 
 * graphics:
-	* make the keyboard and mouse detect double tabs of any key.
+	* add layers. (seems impossible to do)
+	* add the Camera class.
 	* change the initialization model from 
 		* (forced default contructor => Initialize)
 		* to
@@ -11,4 +12,5 @@
 	* make the engine into a static library.
 	* try to learn gradiants and curves.
 	* add the dashed variations.
+	* make the keyboard and mouse detect double tabs of any key.
 	* check if simplifying the geometry increases performance.

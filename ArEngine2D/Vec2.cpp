@@ -14,7 +14,8 @@ namespace ArEngine2D {
 	}
 	auto Vec2::Normalized() const noexcept -> self
 	{ 
-		return operator/(Mag()); 
+		auto const mag{Mag()};
+		return Util::FloatEq(mag, 0.f) ? Vec2{} : operator/(mag);
 	}
 	void Vec2::Normalize() noexcept
 	{ 

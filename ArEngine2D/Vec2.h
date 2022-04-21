@@ -81,6 +81,12 @@ namespace ArEngine2D {
 		{ return x * rhs.y - rhs.x * y; }
 
 		/**
+		 * @return the dot product between the current vector and rhs.
+		*/
+		constexpr auto Hadamard(cref rhs) const noexcept -> self
+		{ return {x * rhs.x, y * rhs.y}; }
+
+		/**
 		 * @return the square of the length of the vector (much faster than Mag()).
 		*/
 		constexpr auto Mag2() const noexcept -> float

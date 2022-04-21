@@ -234,42 +234,64 @@ namespace ArEngine2D {
 			pFormat.Get(), rect, pSolidBrush_.Get());
 		EndTransform();
 	}
-	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity)
+	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity, Transform const& tr)
 	{
-		DrawSpriteRect(loc, sprite, sprite.RectF(), opacity);
+		DrawSpriteRect(loc, sprite, sprite.RectF(), opacity, tr);
 	}
-	void Grafix::DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity)
+	void Grafix::DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity, Transform const& tr)
 	{
 		auto const [w, h] {sprite.Size()};
-		DrawSprite({loc.x - w * 0.5f, loc.y - h * 0.5f}, sprite, opacity);
+		DrawSprite({loc.x - w * 0.5f, loc.y - h * 0.5f}, sprite, opacity, tr);
 		// D2D1_RECT_F const destRect{0.f, 0.f, w, h};
 		// BeginTransform(D2D1::Matrix3x2F::Translation(loc.x - w * 0.5f, loc.y - h * 0.5f));
 		// pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, interpolationMode_);
 		// EndTransform();
 	}
-	void Grafix::DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity)
+	void Grafix::DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity, Transform const& tr)
 	{
 		D2D1_RECT_F const destRect{
 			loc.x, loc.y, loc.x + (rect.right - rect.left), loc.y + (rect.bottom - rect.top)
 		}; 
-		BeginTransform();
+		BeginTransform(tr);
 		pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, interpolationMode_, rect);
 		EndTransform();
 	}
-	void Grafix::DrawSpriteSheet(Vec2 const& loc, SpriteSheet const& sheet, std::uint32_t frameNumber, float opacity)
+	void Grafix::DrawSpriteSheet(Vec2 const& loc, SpriteSheet const& sheet, std::uint32_t frameNumber, float opacity, Transform const& tr)
 	{
-		DrawSpriteRect(loc, sheet, sheet.FrameRectF(frameNumber), opacity);
+		DrawSpriteRect(loc, sheet, sheet.FrameRectF(frameNumber), opacity, tr);
 	}
-	void Grafix::DrawAnimationSpriteSheet(Vec2 const& loc, AnimationSpriteSheet const& sheet, float opacity)
+	void Grafix::DrawAnimationSpriteSheet(Vec2 const& loc, AnimationSpriteSheet const& sheet, float opacity, Transform const& tr)
 	{
-		DrawSpriteRect(loc, sheet, sheet.FrameRectF(sheet.CurrFrame()), opacity);
+		DrawSpriteRect(loc, sheet, sheet.FrameRectF(sheet.CurrFrame()), opacity, tr);
 	}
-	void Grafix::PushTransform(Transform const& newTransform) noexcept 
+	void Grafix::PushTransform(Transform const& newTransform)
 	{
+		tranStack_.push(newTransform);
 		pushedTransform_.Append(newTransform);
+	}
+	void Grafix::PopTransform()
+	{
+		pushedTransform_.Append(tranStack_.top().Inverted());
+		tranStack_.pop();
+	}
+	void Grafix::AppendTransform(Transform const& what) noexcept
+	{
+		pushedTransform_.Append(what);
+	}
+	Transform const& Grafix::GetFullTransform() const noexcept
+	{
+		return pushedTransform_;
+	}
+	Transform const& Grafix::GetLastTransform() const noexcept
+	{
+		return tranStack_.top();
 	}
 	void Grafix::ResetTransform() noexcept
 	{
+		for (size_t i{}, lim{tranStack_.size()}; i < lim; ++i)
+		{
+			tranStack_.pop();
+		}
 		pushedTransform_.Reset();
 	}
 	void Grafix::SetInterpolationMode(InterpolationMode newMode)  

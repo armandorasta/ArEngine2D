@@ -32,6 +32,12 @@ namespace ArEngine2D {
 
 	public:
 
+		constexpr static auto Pi{std::numbers::pi_v<float>};
+		constexpr static auto TwoPi{2.f * Pi};
+		constexpr static auto HalfPi{Pi * 0.5f};
+
+	public:
+
 		/**
 		 * @brief outputs a formatted string to the debug console.
 		 * @param fmt => the format.
@@ -49,6 +55,15 @@ namespace ArEngine2D {
 		template <Details::ComparableToZero TNum>
 		constexpr static auto Abs(TNum num) noexcept
 		{ return num > static_cast<TNum>(0) ? num : -num; }
+
+		template <Details::ComparableToZero TNum>
+		constexpr static auto Sign(TNum num) noexcept 
+		{ 
+			constexpr auto Zero{static_cast<TNum>(0)};
+			constexpr auto One{static_cast<TNum>(1)};
+			constexpr auto NegativeOne{static_cast<TNum>(-1)};
+			return (num == Zero) ? Zero : (num > Zero ? One : NegativeOne);
+		}
 
 		/**
 		 * @brief a stable way for checking for floating point equality.
