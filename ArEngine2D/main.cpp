@@ -7,6 +7,7 @@ namespace User {
 	{
 	public:
 
+		using ArEngine2D::Engine::Engine;
 		using Engine::Engine;
 
 	public:
@@ -103,15 +104,7 @@ namespace User {
 
 INT WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ PSTR, _In_ INT)
 {
-	try
-	{
-		User::MyEngine window{"shit", 800, 600};
-		window.Run();
-	}
-	catch (const std::exception&)
-	{
-
-	}
-
+	User::MyEngine window{"shit", 800, 600};
+	window.Run();
 	return 0;
 }
