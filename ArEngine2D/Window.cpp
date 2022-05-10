@@ -121,7 +121,7 @@ namespace ArEngine2D
 	}
 	void Window::EnableRawInput()
 	{
-		if (not s_bRawInputInitialized_)
+		if (not IsRawInputEnabled())
 		{
 			InitializeRawInput();
 		}
@@ -182,8 +182,8 @@ namespace ArEngine2D
 			case WM_MOUSEMOVE:
 			{
 				// not using MAKEPOINTS because: i am not sure if it's well defined.
-				auto const x{lParam & 0xFFFF};
-				auto const y{(lParam >> 16) & 0xFFFF};
+				std::int16_t const x{lParam & 0xFFFF};
+				std::int16_t const y{(lParam >> 16) & 0xFFFF};
 				if ((x >= 0 and x < width_) and (y >= 0 and y < height_))
 					// inside of the window?
 				{
@@ -215,18 +215,18 @@ namespace ArEngine2D
 			}
 
 			case WM_LBUTTONDOWN:
-				mouse.SetKey(Mouse::LEFT_BUTTON_ID, true);  break;
+				mouse.SetKey(Mouse::sc_LeftButtonID, true);  break;
 			case WM_MBUTTONDOWN:
-				mouse.SetKey(Mouse::MID_BUTTON_ID, true);   break;
+				mouse.SetKey(Mouse::sc_MiddleButtonID, true);   break;
 			case WM_RBUTTONDOWN:
-				mouse.SetKey(Mouse::RIGHT_BUTTON_ID, true); break;
+				mouse.SetKey(Mouse::sc_RightMouseID, true); break;
 
 			case WM_LBUTTONUP:
-				mouse.SetKey(Mouse::LEFT_BUTTON_ID, false);  break;
+				mouse.SetKey(Mouse::sc_LeftButtonID, false);  break;
 			case WM_MBUTTONUP:
-				mouse.SetKey(Mouse::MID_BUTTON_ID, false);   break;
+				mouse.SetKey(Mouse::sc_MiddleButtonID, false);   break;
 			case WM_RBUTTONUP:
-				mouse.SetKey(Mouse::RIGHT_BUTTON_ID, false); break;
+				mouse.SetKey(Mouse::sc_RightMouseID, false); break;
 
 			case WM_MOUSEWHEEL:
 			{

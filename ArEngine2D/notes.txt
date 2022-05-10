@@ -2,8 +2,13 @@
 	* none.
 
 * graphics:
+	* add the Inventory class to Factory.
 	* minimize the number of transformations in the Grafix class by using lazy eval if possible.
 	* make the engine into a static library.
 	* try to learn gradiants and curves.
 	* add the dashed variations.
 	* check if simplifying the geometry increases performance.
+
+need docs:
+	* Camera
+	* DraggableCamera

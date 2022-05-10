@@ -12,8 +12,8 @@
 namespace ArEngine2D {
 	enum class InterpolationMode : std::uint32_t
 	{
-		LINEAR,
-		NEAREST_NEIGHBOR
+		Linear,
+		NearestNeighbor,
 	};
 
 	class Sprite
@@ -86,7 +86,7 @@ namespace ArEngine2D {
 		/**
 		 * @return the width and height of the sprite.
 		*/
-		D2D1_SIZE_F Size() const;
+		D2D1_SIZE_F Coord() const;
 
 		/**
 		 * @return the width of the sprite.

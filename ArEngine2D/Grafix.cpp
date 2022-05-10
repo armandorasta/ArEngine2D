@@ -1,5 +1,7 @@
 #include "Grafix.h"
 
+#include "Camera.h"
+
 namespace ArEngine2D {
 	void Grafix::Initialize(HWND windowHandle)
 	{
@@ -12,6 +14,10 @@ namespace ArEngine2D {
 		GetClientRect(windowHandle, &clientRect);
 		auto const clientWidth{static_cast<UINT32>(clientRect.right - clientRect.left)};
 		auto const clientHeight{static_cast<UINT32>(clientRect.bottom - clientRect.top)};
+
+		// width and height are not used like... ever.
+		this->width_  = static_cast<float>(clientWidth);
+		this->height_ = static_cast<float>(clientHeight);
 
 		HANDLE_GRAPHICS_ERROR(pFactory_->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
@@ -26,8 +32,12 @@ namespace ArEngine2D {
 		HANDLE_GRAPHICS_ERROR(DWriteCreateFactory(
 			DWRITE_FACTORY_TYPE_SHARED, __uuidof(pDWriteFactory_), &pDWriteFactory_
 		));
+
+		// so the program does not have to check for empty stack for every call to PopTransform.
+		PushTransform({});
 		
 		Sprite::InternalInitialization(pRenderTarget_);
+		Camera::InternalInitialization(&width_, &height_);
 	}
 	void Grafix::BeginDraw()
 	{
@@ -37,7 +47,7 @@ namespace ArEngine2D {
 	{
 		HANDLE_ENDDRAW_ERROR(pRenderTarget_.Get());
 	}
-	void Grafix::ClearScreen(ColorF const& color)
+	void Grafix::ClearScreen(ColorF const& color) noexcept
 	{
 		pRenderTarget_->Clear(color.ToD2DColor());
 	}
@@ -194,6 +204,23 @@ namespace ArEngine2D {
 		pRenderTarget_->FillGeometry(pGeometry.Get(), pSolidBrush_.Get());
 		EndTransform();
 	}
+	void Grafix::DrawArrow(Vec2 const& from, Vec2 const& to, ColorF const& color, float thick)
+	{
+		constexpr auto MyMin{10.f};
+		constexpr auto MyRatio{0.05f};
+
+		auto const vNorm{Vec2::Subtract(to, from).Normalized()};
+		auto const vEast{vNorm.ClockwiseNormal()};
+		auto const vWest{-vEast};
+		auto const vSouthWest{(vWest - vNorm).Normalized()};
+		auto const vSouthEast{(vEast - vNorm).Normalized()};
+		auto const dist{Vec2::Dist(from, to)};
+		auto const legSize{std::max(MyRatio * dist, MyMin)};
+		
+		DrawLine(from, to, color, thick);
+		DrawLine(to, to + vSouthEast * legSize, color, thick);
+		DrawLine(to, to + vSouthWest * legSize, color, thick);
+	}
 	void Grafix::DrawString(Vec2 const& loc, std::string str, ColorF const& color, float size)
 	{
 		pSolidBrush_->SetColor(color);
@@ -217,52 +244,78 @@ namespace ArEngine2D {
 			pFormat.Get(), rect, pSolidBrush_.Get());
 		EndTransform();
 	}
-	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity)
+	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity, Transform const& tr)
 	{
-		DrawSpriteRect(loc, sprite, sprite.RectF(), opacity);
+		DrawSpriteRect(loc, sprite, sprite.RectF(), opacity, tr);
 	}
-	void Grafix::DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity)
+	void Grafix::DrawSpriteCenter(Vec2 const& loc, Sprite const& sprite, float opacity, Transform const& tr)
 	{
-		auto const [w, h] {sprite.Size()};
-		DrawSprite({loc.x - w * 0.5f, loc.y - h * 0.5f}, sprite, opacity);
+		auto const [w, h] {sprite.Coord()};
+		DrawSprite({loc.x - w * 0.5f, loc.y - h * 0.5f}, sprite, opacity, tr);
 		// D2D1_RECT_F const destRect{0.f, 0.f, w, h};
 		// BeginTransform(D2D1::Matrix3x2F::Translation(loc.x - w * 0.5f, loc.y - h * 0.5f));
 		// pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, interpolationMode_);
 		// EndTransform();
 	}
-	void Grafix::DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity)
+	void Grafix::DrawSpriteRect(Vec2 const& loc, Sprite const& sprite, D2D1_RECT_F rect, float opacity, Transform const& tr)
 	{
 		D2D1_RECT_F const destRect{
 			loc.x, loc.y, loc.x + (rect.right - rect.left), loc.y + (rect.bottom - rect.top)
 		}; 
-		BeginTransform();
+		BeginTransform(tr);
 		pRenderTarget_->DrawBitmap(sprite.D2DPtr().Get(), destRect, opacity, interpolationMode_, rect);
 		EndTransform();
 	}
-	void Grafix::DrawSpriteSheet(Vec2 const& loc, SpriteSheet const& sheet, std::uint32_t frameNumber, float opacity)
+	void Grafix::DrawSpriteSheet(Vec2 const& loc, SpriteSheet const& sheet, std::uint32_t frameNumber, float opacity, Transform const& tr)
 	{
-		DrawSpriteRect(loc, sheet, sheet.FrameRectF(frameNumber), opacity);
+		DrawSpriteRect(loc, sheet, sheet.FrameRectF(frameNumber), opacity, tr);
 	}
-	void Grafix::DrawAnimationSpriteSheet(Vec2 const& loc, AnimationSpriteSheet const& sheet, float opacity)
+	void Grafix::DrawAnimationSpriteSheet(Vec2 const& loc, AnimationSpriteSheet const& sheet, float opacity, Transform const& tr)
 	{
-		DrawSpriteRect(loc, sheet, sheet.FrameRectF(sheet.CurrFrame()), opacity);
+		DrawSpriteRect(loc, sheet, sheet.FrameRectF(sheet.CurrFrame()), opacity, tr);
 	}
-	void Grafix::PushTransform(Transform const& newTransform) noexcept 
+	void Grafix::PushTransform(Transform const& newTransform)
 	{
+		tranDoubleStack_.push({});
+		tranDoubleStack_.top().push(pushedTransform_);
 		pushedTransform_.Append(newTransform);
+	}
+	void Grafix::PopTransform()
+	{
+		assert(not tranDoubleStack_.empty() && "Tried to pop an empty transform stack");
+		tranDoubleStack_.pop();
+		pushedTransform_ = tranDoubleStack_.top().top();
+	}
+	void Grafix::AppendTransform(Transform const& what) noexcept
+	{
+		tranDoubleStack_.top().push(pushedTransform_);
+		pushedTransform_.Append(what);
+	}
+	void Grafix::UndoTransform() noexcept
+	{
+		pushedTransform_ = tranDoubleStack_.top().top();
+		tranDoubleStack_.top().pop();
+	}
+	Transform const& Grafix::GetFullTransform() const noexcept
+	{
+		return pushedTransform_;
 	}
 	void Grafix::ResetTransform() noexcept
 	{
+		for (size_t i{}, lim{tranDoubleStack_.size()}; i < lim; ++i)
+		{
+			tranDoubleStack_.pop();
+		}
 		pushedTransform_.Reset();
 	}
 	void Grafix::SetInterpolationMode(InterpolationMode newMode)  
 	{
 		switch (newMode) 
 		{
-		case InterpolationMode::LINEAR: 
+		case InterpolationMode::Linear: 
 			interpolationMode_ = D2D1_BITMAP_INTERPOLATION_MODE_LINEAR;
 			break;
-		case InterpolationMode::NEAREST_NEIGHBOR: 
+		case InterpolationMode::NearestNeighbor: 
 			interpolationMode_ = D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
 			break;
 		default:

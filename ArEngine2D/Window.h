@@ -42,7 +42,6 @@ namespace ArEngine2D {
 
 		/**
 		 * @brief updates the title text if it was changed (through SetTitle).
-		 * @return true if the update was successful, false otherwise.
 		*/
 		void UpdateTitle() noexcept;
 
@@ -54,7 +53,7 @@ namespace ArEngine2D {
 
 		void InitializeRawInput();
 		void EnableRawInput();
-		constexpr void DisableRawInput()
+		constexpr void DisableRawInput() noexcept
 		{ s_bRawInputEnabled_ = false; }
 
 	private:

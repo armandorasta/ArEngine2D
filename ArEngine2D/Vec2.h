@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include <d2d1.h>
 #include <compare>
+#include <algorithm>
 
 namespace ArEngine2D {
 	class Vec3;
@@ -31,7 +32,7 @@ namespace ArEngine2D {
 		{ return {x, y}; }
 
 		/** 
-		* @brief creats a vector using a direction and a length.
+		 * @brief creats a vector using a direction and a length.
 		 * @param dir => the direction of the vector (angle in radians)
 		 * @param len => the length of the vector (defaults to 1)
 		 * @return <cos(dir), sin(dir)> * len
@@ -39,6 +40,45 @@ namespace ArEngine2D {
 		constexpr static self FromDir(float dir, float len = 1.f)
 		{
 			return self{DirectX::XMScalarCos(dir), DirectX::XMScalarSin(dir)} * len;
+		}
+
+		/**
+		 * @return the square distance between two vectors.
+		*/
+		constexpr static float Dist2(cref lhs, cref rhs)
+		{
+			return (lhs - rhs).Mag2();
+		}
+
+		/**
+		 * @return the distance between two vectors.
+		*/
+		static float Dist(cref lhs, cref rhs);
+
+		/**
+		 * @return rhs - lhs.
+		*/
+		constexpr static self Subtract(cref lhs, cref rhs)
+		{ return lhs - rhs; }
+
+		/**
+		 * @return rhs + lhs.
+		*/
+		constexpr static self Add(cref lhs, cref rhs)
+		{ return lhs + rhs; }
+
+		/**
+		 * @param vec => the vector to be clamped
+		 * @param topLeft => a vector containing the min x and y.
+		 * @param botRight => a vector containing the max x and y. 
+		 * @return a clamped version of the passed in vector.
+		*/
+		constexpr static self Clamp(Vec2 const& vec, Vec2 const& topLeft, Vec2 const& botRight)
+		{ 
+			return {
+				std::clamp(vec.x, topLeft.x, botRight.x),
+				std::clamp(vec.y, topLeft.y, botRight.y),
+			};
 		}
 
 	public:
@@ -54,6 +94,12 @@ namespace ArEngine2D {
 		*/
 		constexpr auto Cross(cref rhs) const noexcept -> float
 		{ return x * rhs.y - rhs.x * y; }
+
+		/**
+		 * @return the dot product between the current vector and rhs.
+		*/
+		constexpr auto Hadamard(cref rhs) const noexcept -> self
+		{ return {x * rhs.x, y * rhs.y}; }
 
 		/**
 		 * @return the square of the length of the vector (much faster than Mag()).
@@ -87,6 +133,20 @@ namespace ArEngine2D {
 		 * @param angle => the angle (in rad) to rotate the vector by.
 		*/
 		void Rotate(float angle) noexcept;
+
+		/**
+		 * @brief this operation is much faster than a call to the Rotate function.
+		 * @return the current vector rotated perpendicularly counter clock-wise.
+		*/
+		self CounterClockwiseNormal() const noexcept
+		{ return {y, -x}; }
+
+		/**
+		 * @brief this operation is much faster than a call to the Rotate function.
+		 * @return the current vector rotated perpendicularly clock-wise.
+		*/
+		self ClockwiseNormal() const noexcept
+		{ return -CounterClockwiseNormal(); }
 
 		/**
 		 * @return "(x, y)"
@@ -132,30 +192,22 @@ namespace ArEngine2D {
 
 	public: // operators
 		
-		constexpr auto operator+() const noexcept -> cref {
-			return *this;
-		}
-		constexpr auto operator-() const noexcept -> self {
-			return {-x, -y};
-		}
-		constexpr auto operator+(cref rhs) const noexcept -> self {
-			return {x + rhs.x, y + rhs.y};
-		}
-		constexpr auto operator-(cref rhs) const noexcept -> self {
-			return {x - rhs.x, y - rhs.y};
-		}
-		constexpr auto operator*(cref rhs) const noexcept -> float {
-			return Dot(rhs);
-		}
-		constexpr auto operator*(float rhs) const noexcept -> self {
-			return {x * rhs, y * rhs};
-		}
-		constexpr friend auto operator*(float lhs, self rhs) noexcept -> self {
-			return rhs * lhs;
-		}
-		constexpr auto operator/(float rhs) const noexcept -> self {
-			return operator*(1.f / rhs);
-		}
+		constexpr auto operator+() const noexcept -> cref 
+		{ return *this; }
+		constexpr auto operator-() const noexcept -> self 
+		{ return {-x, -y}; }
+		constexpr auto operator+(cref rhs) const noexcept -> self 
+		{ return {x + rhs.x, y + rhs.y}; }
+		constexpr auto operator-(cref rhs) const noexcept -> self 
+		{ return {x - rhs.x, y - rhs.y}; }
+		constexpr auto operator*(cref rhs) const noexcept -> float 
+		{ return Dot(rhs); }
+		constexpr auto operator*(float rhs) const noexcept -> self 
+		{ return {x * rhs, y * rhs}; }
+		constexpr friend auto operator*(float lhs, self rhs) noexcept -> self 
+		{ return rhs * lhs; }
+		constexpr auto operator/(float rhs) const noexcept -> self 
+		{ return operator*(1.f / rhs); }
 
 		constexpr self& operator+=(cref rhs) noexcept
 		{ return operator=(operator+(rhs)); }

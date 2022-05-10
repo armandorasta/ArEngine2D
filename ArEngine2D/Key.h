@@ -66,26 +66,26 @@ namespace ArEngine2D {
 		J = 'J', K = 'K', L = 'L', M = 'M', N = 'N', O = 'O', P = 'P', Q = 'Q', R = 'R', 
 		S = 'S', T = 'T', U = 'U', V = 'V', W = 'W', X = 'X', Y = 'Y', Z = 'Z',
 		// number pad
-		NUM0 = VK_NUMPAD0, NUM1 = VK_NUMPAD1, NUM2 = VK_NUMPAD2, NUM3 = VK_NUMPAD3, NUM4 = VK_NUMPAD4, 
-		NUM5 = VK_NUMPAD5, NUM6 = VK_NUMPAD6, NUM7 = VK_NUMPAD7, NUM8 = VK_NUMPAD8, NUM9 = VK_NUMPAD9,
+		Num0 = VK_NUMPAD0, Num1 = VK_NUMPAD1, Num2 = VK_NUMPAD2, Num3 = VK_NUMPAD3, Num4 = VK_NUMPAD4, 
+		Num5 = VK_NUMPAD5, Num6 = VK_NUMPAD6, Num7 = VK_NUMPAD7, Num8 = VK_NUMPAD8, Num9 = VK_NUMPAD9,
 		// calculator keys
-		MUL = VK_MULTIPLY, DIV = VK_DIVIDE, ADD = VK_ADD, SUB = VK_SUBTRACT, DECIMAL = VK_DECIMAL, 
+		Mul = VK_MULTIPLY, Div = VK_DIVIDE, Add = VK_ADD, Sub = VK_SUBTRACT, Decimal = VK_DECIMAL, 
 		// function keys
 		F1 = VK_F1, F2 = VK_F2, F3 = VK_F3, F4  = VK_F4 , F5  = VK_F5 , F6  = VK_F6 , 
 		F7 = VK_F7, F8 = VK_F8, F9 = VK_F9, F10 = VK_F10, F11 = VK_F11, F12 = VK_F12,
 		// arrow keys
-		UP = VK_UP, DOWN = VK_DOWN, LEFT = VK_LEFT, RIGHT = VK_RIGHT,
+		Up = VK_UP, Down = VK_DOWN, Left = VK_LEFT, Right = VK_RIGHT,
 		// control
-		CONTROL = VK_CONTROL, LEFT_CONTROL = VK_LCONTROL, RIGHT_CONTROL = VK_RCONTROL,
+		Control = VK_CONTROL, LeftControl = VK_LCONTROL, RightControl = VK_RCONTROL,
 		// shift
-		SHIFT = VK_SHIFT,  LEFT_SHIFT = VK_LSHIFT, RIGHT_SHIFT = VK_RSHIFT,
+		Shift = VK_SHIFT,  LeftShift = VK_LSHIFT, RightShift = VK_RSHIFT,
 		// alt which is called menu for some unknown reason
-		ALT = VK_MENU, LEFT_ALT = VK_LMENU, RIGHT_ALT = VK_RMENU,
+		Alt = VK_MENU, LeftAlt = VK_LMENU, RightAlt = VK_RMENU,
 		// other keys
-		ESCAPE = VK_ESCAPE, TAB = VK_TAB, NUMLOCK = VK_NUMLOCK, 
-		ENTER = VK_RETURN, SPACE = VK_SPACE, BACKSPACE = VK_BACK, DEL /*DELETE is a macro*/ = VK_DELETE, 
-		INSERT = VK_INSERT, HOME = VK_HOME, END = VK_END,
-		PRINT = VK_PRINT,
+		Escape = VK_ESCAPE, Tab = VK_TAB, NumLock = VK_NUMLOCK, 
+		Enter = VK_RETURN, Space = VK_SPACE, Backspace = VK_BACK, Delete /*DELETE is a macro*/ = VK_DELETE, 
+		Insert = VK_INSERT, Home = VK_HOME, End = VK_END,
+		Print = VK_PRINT,
 	};
 
 	// this function must be here because, it makes changing the underlying 

@@ -78,6 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)Lib\DevIL Windows SDK\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)Lib\DevIL Windows SDK\lib\x64\Release</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -167,18 +169,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="FactoryCore.h" />
+    <ClInclude Include="GuiWindow.h" />
+    <ClInclude Include="TeditGame.h" />
+    <ClInclude Include="Block.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Car.h" />
+    <ClInclude Include="CarGame.h" />
     <ClInclude Include="ColorF.h" />
+    <ClInclude Include="DataGrid.h" />
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="FactoryGame.h" />
     <ClInclude Include="FixedWindowsHeader.h" />
     <ClInclude Include="Grafix.h" />
+    <ClInclude Include="GuiCore.h" />
     <ClInclude Include="IEngineError.h" />
     <ClInclude Include="ImplUtil.h" />
     <ClInclude Include="ISingle.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Lib\Include\FreeImage.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="TeditCore.h" />
     <ClInclude Include="Testing\ArTest20.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Util.h" />
@@ -186,9 +201,20 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Car.cpp" />
+    <ClCompile Include="CarGame.cpp" />
+    <ClCompile Include="DataGrid.cpp" />
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="FactoryGame.cpp" />
     <ClCompile Include="Grafix.cpp" />
+    <ClInclude Include="Gui.h" />
+    <ClCompile Include="Gui.cpp" />
     <ClCompile Include="IEngineError.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -197,7 +223,15 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="DataGridTestResults.txt" />
+    <Text Include="FacLevel.txt" />
     <Text Include="notes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Ball.png" />
+    <Image Include="Resources\car.png" />
+    <Image Include="Resources\MyBitmap.bmp" />
+    <Image Include="Resources\MyPNG.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -54,7 +54,7 @@ namespace ArEngine2D {
 	void Sprite::CopyFromMemory(void const* pData, D2D1_RECT_U const& whereTo, std::size_t pitch)
 	{
 		InitializationCheck();
-		pImage_->CopyFromMemory(&whereTo, pData, static_cast<UINT32>(pitch));
+		HANDLE_GRAPHICS_ERROR(pImage_->CopyFromMemory(&whereTo, pData, static_cast<UINT32>(pitch)));
 
 		// size may have changed.
 		auto const size{pImage_->GetSize()};
@@ -64,7 +64,7 @@ namespace ArEngine2D {
 	void Sprite::CopyFromSpriteRect(Sprite const& that, D2D1_RECT_U const& from, D2D1_POINT_2U const& whereTo)
 	{
 		InitializationCheck();
-		pImage_->CopyFromBitmap(&whereTo, that.pImage_.Get(), &from);
+		HANDLE_GRAPHICS_ERROR(pImage_->CopyFromBitmap(&whereTo, that.pImage_.Get(), &from));
 	}
 	void Sprite::CopyFromSprite(Sprite const& that)
 	{
@@ -91,7 +91,7 @@ namespace ArEngine2D {
 			CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, __uuidof(s_pImagingFactory_.Get()), &s_pImagingFactory_
 		));
 	}
-	D2D1_SIZE_F Sprite::Size() const
+	D2D1_SIZE_F Sprite::Coord() const
 	{
 		InitializationCheck();
 		return {Width(), Height()};

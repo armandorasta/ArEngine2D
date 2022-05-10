@@ -4,13 +4,18 @@
 #include <format>
 
 namespace ArEngine2D {
+	float Vec2::Dist(cref lhs, cref rhs)
+	{
+		return std::sqrt(Dist2(lhs, rhs));
+	}
 	auto Vec2::Mag() const noexcept -> float
 	{ 
 		return std::sqrt(Mag2()); 
 	}
 	auto Vec2::Normalized() const noexcept -> self
 	{ 
-		return operator/(Mag()); 
+		auto const mag{Mag()};
+		return Util::FloatEq(mag, 0.f) ? Vec2{} : operator/(mag);
 	}
 	void Vec2::Normalize() noexcept
 	{ 

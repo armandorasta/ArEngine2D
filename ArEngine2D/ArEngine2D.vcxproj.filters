@@ -1,105 +1,225 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Testing">
       <UniqueIdentifier>{7d41a9be-dd26-4cb5-98d2-9c951733fd57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Impl">
+      <UniqueIdentifier>{a12ab6c7-6e6d-4b2a-ab95-c14cb9363537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Car">
+      <UniqueIdentifier>{2797ef8c-dd36-4fca-9771-0da67dd9a8e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{ddf662c2-146b-40d5-a741-f18af6541d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory\Resource Files">
+      <UniqueIdentifier>{de27abf8-f609-43cd-9cd6-7f56a64b068e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gui">
+      <UniqueIdentifier>{11758960-ad58-4cd0-984d-2fe4a7df8655}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Car\src">
+      <UniqueIdentifier>{2cc24ab7-d548-4024-af55-34b2707b58a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory\src">
+      <UniqueIdentifier>{00f716ed-3712-4981-8a5f-af99293d4051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Impl\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Impl\src">
+      <UniqueIdentifier>{650f2403-8ffb-4c1b-b37a-819590b2146b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Impl\src\Input">
+      <UniqueIdentifier>{17b8494b-f049-416c-910c-cdc7c9d91594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Impl\src\Math">
+      <UniqueIdentifier>{377ac88b-611e-4219-b638-c89184d76f64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Impl\src\Graphics">
+      <UniqueIdentifier>{973c5c9f-cf4d-4ca5-98ab-c23c13055185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextEditor">
+      <UniqueIdentifier>{3ff99014-8328-4e97-92c2-5109dcf1b59a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Key.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Testing\ArTest20.h">
       <Filter>Testing</Filter>
     </ClInclude>
-    <ClInclude Include="ISingle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vec2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FixedWindowsHeader.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Editor.h">
+      <Filter>Factory</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>Header Files</Filter>
+      <Filter>Impl\src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="IEngineError.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Mouse.h">
+      <Filter>Impl\src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="ImplUtil.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Impl\src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Grafix.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Key.h">
+      <Filter>Impl\src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Engine.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Vec2.h">
+      <Filter>Impl\src\Math</Filter>
     </ClInclude>
     <ClInclude Include="ColorF.h">
-      <Filter>Header Files</Filter>
+      <Filter>Impl\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Grafix.h">
+      <Filter>Impl\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Include\FreeImage.h">
+      <Filter>Impl\src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files</Filter>
+      <Filter>Impl\src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Surface.h">
-      <Filter>Header Files</Filter>
+      <Filter>Impl\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Impl\src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Car.h">
+      <Filter>Car\src</Filter>
+    </ClInclude>
+    <ClInclude Include="CarGame.h">
+      <Filter>Car\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>Factory\src</Filter>
+    </ClInclude>
+    <ClInclude Include="DataGrid.h">
+      <Filter>Factory\src</Filter>
+    </ClInclude>
+    <ClInclude Include="FactoryGame.h">
+      <Filter>Factory\src</Filter>
+    </ClInclude>
+    <ClInclude Include="FactoryCore.h">
+      <Filter>Factory\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="FixedWindowsHeader.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="IEngineError.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="ImplUtil.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="ISingle.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="TeditGame.h">
+      <Filter>TextEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiCore.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="TeditCore.h">
+      <Filter>TextEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiWindow.h">
+      <Filter>Gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Vec2.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="FactoryGame.cpp">
+      <Filter>Factory\src</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Factory\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>Factory\src</Filter>
+    </ClCompile>
+    <ClCompile Include="DataGrid.cpp">
+      <Filter>Factory\src</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Impl\src\Input</Filter>
     </ClCompile>
-    <ClCompile Include="IEngineError.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Impl\src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Impl\src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec2.cpp">
+      <Filter>Impl\src\Math</Filter>
     </ClCompile>
     <ClCompile Include="Grafix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Impl\src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Impl\src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Surface.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Impl\src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Impl\src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="CarGame.cpp">
+      <Filter>Car\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Impl\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Car.cpp">
+      <Filter>Impl\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Impl\src</Filter>
+    </ClCompile>
+    <ClCompile Include="IEngineError.cpp">
+      <Filter>Impl\src</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Impl\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui.cpp">
+      <Filter>Gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
+    <Text Include="FacLevel.txt">
+      <Filter>Factory\Resource Files</Filter>
+    </Text>
+    <Text Include="DataGridTestResults.txt">
+      <Filter>Testing</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Ball.png">
+      <Filter>Impl\Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\MyBitmap.bmp">
+      <Filter>Impl\Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\MyPNG.png">
+      <Filter>Impl\Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\car.png">
+      <Filter>Car</Filter>
+    </Image>
   </ItemGroup>
 </Project>

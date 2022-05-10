@@ -1,10 +1,6 @@
 #include "Engine.h"
 
-///
-#include <numbers>
 #include <chrono>
-#include "Transform.h"
-///
 
 namespace ArEngine2D {
 	Engine::Engine(std::string_view title, std::int32_t windowWidth, std::int32_t windowHeight) :
