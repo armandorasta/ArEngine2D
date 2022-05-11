@@ -139,6 +139,21 @@
     <ClInclude Include="GuiWindow.h">
       <Filter>Gui</Filter>
     </ClInclude>
+    <ClInclude Include="GuiButton.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiSize.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiStatus.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiUtil.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiRectF.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FactoryGame.cpp">
@@ -198,6 +213,9 @@
     <ClCompile Include="Gui.cpp">
       <Filter>Gui</Filter>
     </ClCompile>
+    <ClCompile Include="GuiButton.cpp" />
+    <ClCompile Include="GuiStatus.cpp" />
+    <ClCompile Include="GuiRectF.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
