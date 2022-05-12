@@ -1,22 +1,8 @@
 #pragma once
 #include "GuiCore.h"
+#include "GuiButton.h"
 
 ARGUI_BEGIN_NAMESPACE
-
-// SetText
-// SetTextColor
-// SetBGColor
-// SetLineColor
-// SetWidth
-// SetHeight
-// SetMouseHoverListener
-// SetMouseClickListener
-// SetMouseLeaveListener
-// AddKeyboardShortcut
-// SetKeybaordListener
-// Draw
-//
-class GuiButton;
 
 // SetText
 // SetColor
@@ -31,16 +17,6 @@ class GuiButton;
 //
 class GuiText;
 
-// Set Text
-// SetBGColor
-// SetTextColor
-// SetLineColor
-// SetListener
-// SetMin
-// SetMax
-// Draw
-//
-class GuiSlider;
 
 // for now, no resizeable windows.
 class GuiWindow

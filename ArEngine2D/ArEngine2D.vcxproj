@@ -173,6 +173,7 @@
     <ClInclude Include="GuiButton.h" />
     <ClInclude Include="GuiRectF.h" />
     <ClInclude Include="GuiSize.h" />
+    <ClInclude Include="GuiSlider.h" />
     <ClInclude Include="GuiStatus.h" />
     <ClInclude Include="GuiUtil.h" />
     <ClInclude Include="GuiWindow.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="GuiButton.cpp" />
     <ClCompile Include="GuiRectF.cpp" />
+    <ClCompile Include="GuiSlider.cpp" />
     <ClCompile Include="GuiStatus.cpp" />
     <ClCompile Include="IEngineError.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -240,6 +242,9 @@
     <Image Include="Resources\car.png" />
     <Image Include="Resources\MyBitmap.bmp" />
     <Image Include="Resources\MyPNG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

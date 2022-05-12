@@ -19,8 +19,4 @@ enum class GuiStatus : Uint
 
 std::string GuiStatusToString(GuiStatus status) noexcept;
 
-namespace Details {
-	GuiStatus ConditionalStatus(bool condition, GuiStatus ifFalse) noexcept;
-}
-
 ARGUI_END_NAMESPACE

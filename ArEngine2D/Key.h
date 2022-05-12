@@ -20,8 +20,9 @@ namespace ArEngine2D {
 		*/
 		constexpr void FrameUpdate() noexcept
 		{
-			bPress_ = bStateCurrFrame_ and not bStateLastFrame_;
-			bDown_  = bStateCurrFrame_;
+			bPress_			 = bStateCurrFrame_ && !bStateLastFrame_;
+			bDown_			 = bStateCurrFrame_;
+			bReleased_		 = !bStateCurrFrame_ && bStateLastFrame_;
 			bStateLastFrame_ = bStateCurrFrame_;
 		}
 
@@ -30,9 +31,7 @@ namespace ArEngine2D {
 		 * @param state => the new state.
 		*/
 		constexpr void Set(bool state) noexcept
-		{
-			bStateCurrFrame_ = state;
-		}
+		{ bStateCurrFrame_ = state; }
 
 		/**
 		 * @return true if the mouse was down this frame but not the frame before, returns false otherwise.
@@ -52,9 +51,16 @@ namespace ArEngine2D {
 		constexpr auto IsUp() const noexcept
 		{ return not IsDown(); }
 
+		/**
+		 * @return true if the key was released this frame, returns false otherwise.
+		*/
+		constexpr auto IsJustReleased() const noexcept
+		{ return bReleased_; }
+
 	private:
 		bool bPress_;
 		bool bDown_;
+		bool bReleased_;
 		bool bStateCurrFrame_;
 		bool bStateLastFrame_;
 	};

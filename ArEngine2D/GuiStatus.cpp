@@ -32,16 +32,5 @@ std::string GuiStatusToString(GuiStatus status) noexcept
 	return GuiStr::ToString(status); 
 }
 
-namespace Details {
-	GuiStatus ConditionalStatus(bool condition, GuiStatus ifFalse) noexcept
-	{
-		if (!condition)
-		{
-			return ifFalse;
-		}
-		else return GuiStatus::Fine;
-	}
-}
-
 ARGUI_END_NAMESPACE
 

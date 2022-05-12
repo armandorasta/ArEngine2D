@@ -24,27 +24,26 @@ GuiRectF::GuiRectF(Vec2 const& v0, Vec2 const& v1) noexcept
 }
 
 bool GuiRectF::Contains(Vec2 const& point) const noexcept
-{
-	return point > v0_ && point < v1_;
+{ 
+	return {
+		point.x > v0_.x && point.x < v1_.x && 
+		point.y > v0_.y && point.y < v1_.y
+	};
 }
 
 bool GuiRectF::Contains(GuiRectF const& that) const noexcept
 {
 	return {
-		v0_.x < that.v0_.x &&
-		v1_.x > that.v1_.x &&
-		v0_.y < that.v0_.y &&
-		v1_.y > that.v1_.y
+		v0_.x <= that.v0_.x && v1_.x >= that.v1_.x &&
+		v0_.y <= that.v0_.y && v1_.y >= that.v1_.y
 	};
 }
 
 bool GuiRectF::Overlaps(GuiRectF const& that) const noexcept
 {
 	return { // operators < and > from Vec2 don't do the right thing :/ 
-		v0_.x < that.v1_.x &&
-		v1_.x > that.v0_.x &&
-		v0_.y < that.v1_.y &&
-		v1_.y > that.v0_.y
+		v0_.x <= that.v1_.x && v1_.x >= that.v0_.x &&
+		v0_.y <= that.v1_.y && v1_.y >= that.v0_.y
 	};
 }
 
@@ -90,13 +89,13 @@ Vec2 GuiRectF::CalcOverlapVec(GuiRectF const& that) const noexcept
 	}();
 
 	// move out with the least amount of distance possible.
-	if (std::abs(xDel) < std::abs(yDel))
-	{
-		return Vec2{xDel, 0.f};
-	}
-	else
+	if (std::abs(yDel) < std::abs(xDel))
 	{
 		return Vec2{0.f, yDel};
+	}
+	else // if greater than or equal which (hopefully) will pioritize the x-axis.
+	{
+		return Vec2{xDel, 0.f};
 	}
 }
 
@@ -331,7 +330,7 @@ float GuiRectF::GetTop() const noexcept
 float GuiRectF::GetBot() const noexcept
 { return v1_.y; }
 
-Vec2 const& GuiRectF::GetTopLeft() const noexcept
+Vec2 GuiRectF::GetTopLeft() const noexcept
 { return v0_; }
 
 Vec2 GuiRectF::GetTopRight() const noexcept
@@ -340,11 +339,10 @@ Vec2 GuiRectF::GetTopRight() const noexcept
 Vec2 GuiRectF::GetBotLeft() const noexcept
 { return {v0_.x, v1_.y}; }
 
-Vec2 const& GuiRectF::GetBotRight() const noexcept
+Vec2 GuiRectF::GetBotRight() const noexcept
 { return v1_; }
 
 Vec2 GuiRectF::GetCenter() const noexcept
-{ return v0_ + 0.5f * v1_; }
+{ return 0.5f * (v1_ + v0_); }
 
 ARGUI_END_NAMESPACE
-

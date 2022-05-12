@@ -3,72 +3,88 @@
 #include "GuiCore.h"
 #include "GuiSize.h"
 #include "GuiStatus.h"
+#include "GuiRectF.h"
 
 ARGUI_BEGIN_NAMESPACE
 
 class GuiButton
 {
-public:
-	GuiButton(Vec2 const& loc, std::string_view text, Uint width, Uint height, Uint textSize, 
-		ColorF const& textCol, ColorF const& bgCol, ColorF const& lineCol = Colors::Black) noexcept;
+private:
+	constexpr static auto sc_MinSize{50.f};
+	constexpr static auto sc_MaxSize{300.f};
 
 public:
-	GuiStatus SetLocChecked(Vec2 const& newLoc, Vec2 const& minVec, Vec2 const& maxVec) noexcept;
+	GuiButton(Vec2 const& loc, std::string_view text, float width, float height, 
+		ColorF const& activeTextCol, ColorF const& activeBGCol, ColorF const& activeLineCol
+	) noexcept;
+
+public:
 	void SetLoc(Vec2 const& newLoc) noexcept;
 	GuiStatus SetText(std::string_view newText);
-	GuiStatus SetWidth(Uint newWidth) noexcept;
-	GuiStatus SetHeight(Uint newHeight) noexcept;
+	GuiStatus SetWidth(float newWidth) noexcept;
+	GuiStatus SetHeight(float newHeight) noexcept;
 	void SetBGColor(ColorF const& newBGCol) noexcept;
 	void SetTextColor(ColorF const& newTextCol) noexcept;
 	void SetLineColor(ColorF const& newLineCol) noexcept;
 
 public:
-	void Update(Mouse& mouse) noexcept;
+	void Draw(Grafix& gfx);
+
+public:
+	void Update(Mouse const& mouse, Vec2 const& mouseLocLastFrame) noexcept;
 	
-	bool IsActive() const noexcept;
-	void Activate() noexcept;
-	void Deactivate() noexcept;
+	[[nodiscard]] bool IsEnabled() const noexcept;
+	void Enable() noexcept;
+	void Disable() noexcept;
 	
-	void IsVisible() const noexcept;
+	[[nodiscard]] bool IsVisible() const noexcept;
 	void Show() noexcept;
 	void Hide() noexcept;
 	
-	bool IsMouseEntered() const noexcept;
-	bool IsMouseClicked() const noexcept;
-	bool IsMouseLeft() const noexcept;
+	[[nodiscard]] bool IsMouseEntered() const noexcept;
+	[[nodiscard]] bool IsMouseHovered() const noexcept;
+	[[nodiscard]] bool IsMouseLeft() const noexcept;
+	[[nodiscard]] bool IsMouseClicked() const noexcept;
+	[[nodiscard]] bool IsMouseHeldDown() const noexcept;
+	[[nodiscard]] bool IsMouseReleased() const noexcept;
 
 public:
-	Vec2 const& GetLoc() const noexcept;
-	std::string_view GetText() const noexcept;
-	Uint GetWidth() const noexcept;
-	Uint GetHeight() const noexcept;
-	ColorF const& GetBGColor() const noexcept;
-	ColorF const& GetTextColor() const noexcept;
-	ColorF const& GetLineColor() const noexcept;
-	GuiStatus GetStatus() const noexcept;
+	[[nodiscard]] Vec2 GetLoc() const noexcept;
+	[[nodiscard]] std::string_view GetText() const noexcept;
+	[[nodiscard]] float GetWidth() const noexcept;
+	[[nodiscard]] float GetHeight() const noexcept;
+	[[nodiscard]] ColorF const& GetBGColor() const noexcept;
+	[[nodiscard]] ColorF const& GetTextColor() const noexcept;
+	[[nodiscard]] ColorF const& GetLineColor() const noexcept;
+	[[nodiscard]] GuiStatus GetStatus() const noexcept;
+	[[nodiscard]] GuiRectF const& GetRectF() const noexcept;
 
 private:
 	void UpdateStatus(bool condition, GuiStatus ifTrueOtherwiseFine) noexcept;
 	void ResetStatus() noexcept;
+	void UpdateTextSize() noexcept;
+	[[nodiscard]] float ClampSize(float size) const noexcept;
 
 private:
 	// looks
-	Vec2 loc_;
+	GuiRectF rect_;
 	ColorF bgCol_;
 	ColorF textCol_;
 	ColorF lineCol_;
-	Uint width_;
-	Uint height_;
 	std::string text_;
-	Uint textSize_;
+	float textSize_;
 
 	// logic
 	GuiStatus currStatus_{GuiStatus::Fine};
-	bool bActive_;
-	bool bVisible_;
-	bool bMouseClicked_;
-	bool bMouseHovered_;
-	bool bMouseLeft_;
+	bool bActive_{true};
+	bool bVisible_{true};
+
+	bool bMouseClicked_{};
+	bool bMouseReleased_{};
+	bool bMouseHeld_{};
+	bool bMouseEntered_{};
+	bool bMouseLeft_{};
+	bool bMouseHovered_{};
 };
 
 ARGUI_END_NAMESPACE

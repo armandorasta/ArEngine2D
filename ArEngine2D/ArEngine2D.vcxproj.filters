@@ -154,6 +154,9 @@
     <ClInclude Include="GuiRectF.h">
       <Filter>Gui</Filter>
     </ClInclude>
+    <ClInclude Include="GuiSlider.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FactoryGame.cpp">
@@ -213,9 +216,18 @@
     <ClCompile Include="Gui.cpp">
       <Filter>Gui</Filter>
     </ClCompile>
-    <ClCompile Include="GuiButton.cpp" />
-    <ClCompile Include="GuiStatus.cpp" />
-    <ClCompile Include="GuiRectF.cpp" />
+    <ClCompile Include="GuiButton.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiRectF.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiSlider.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiStatus.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
@@ -239,5 +251,8 @@
     <Image Include="Resources\car.png">
       <Filter>Car</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

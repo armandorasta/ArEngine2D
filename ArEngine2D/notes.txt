@@ -2,7 +2,6 @@
 	* none.
 
 * graphics:
-	* add the Inventory class to Factory.
 	* minimize the number of transformations in the Grafix class by using lazy eval if possible.
 	* make the engine into a static library.
 	* try to learn gradiants and curves.
@@ -10,5 +9,39 @@
 	* check if simplifying the geometry increases performance.
 
 need docs:
+	* All ArGui
 	* Camera
 	* DraggableCamera
+
+ArFactory
+{
+	* Finish ArGui.
+	* add the Inventory class to Factory.
+}
+
+ArGui
+{
+	* Enhance DrawString with:
+		.DrawStringCenter
+		.DrawStringRectClip
+		.DrawStringRectWrap
+
+	* Add the bare minimum and the very flexible interfaces:
+		.IGuiSlider
+		.IGuiElement
+
+	* Change Rel to Set in RectF :(
+	* Add GuiText
+	* Add GuiTextBuffer
+	* Add GuiCheckBox
+	* Add GuiDropDownMenu
+	* Add GuiScrollBar (just a vertical slider probably?)
+	* Start Implementing The GuiWindow Class.
+
+	* Add docs to RectF and GuiButton.
+}
+
+ArTedit
+{
+	* Finished implementing ArGui.
+}

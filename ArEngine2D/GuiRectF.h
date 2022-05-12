@@ -19,12 +19,12 @@ public:
 	GuiRectF(Vec2 const& v0, Vec2 const& v1) noexcept;
 
 public:
-	bool Contains(Vec2 const& point) const noexcept;
-	bool Contains(GuiRectF const& that) const noexcept;
-	bool Overlaps(GuiRectF const& that) const noexcept;
-	bool Intersects(GuiRectF const& that) const noexcept;
+	[[nodiscard]] bool Contains(Vec2 const& point) const noexcept;
+	[[nodiscard]] bool Contains(GuiRectF const& that) const noexcept;
+	[[nodiscard]] bool Overlaps(GuiRectF const& that) const noexcept;
+	[[nodiscard]] bool Intersects(GuiRectF const& that) const noexcept;
 	void MoveOutOf(GuiRectF const& that) noexcept;
-	Vec2 CalcOverlapVec(GuiRectF const& point) const noexcept;
+	[[nodiscard]] Vec2 CalcOverlapVec(GuiRectF const& point) const noexcept;
 
 public:
 	void Draw(Grafix& gfx, ColorF const& col, float thick) noexcept;
@@ -66,20 +66,20 @@ private:
 	void SwapAnyIfNeeded() noexcept;
 
 public:
-	float GetWidth() const noexcept;
-	float GetHeight() const noexcept;
-	float GetDiagMag() const noexcept;
-	float GetArea() const noexcept;
-	float GetPerimeter() const noexcept;
-	float GetLeft() const noexcept;
-	float GetRight() const noexcept;
-	float GetTop() const noexcept;
-	float GetBot() const noexcept;
-	Vec2 const& GetTopLeft() const noexcept;
-	Vec2 GetTopRight() const noexcept;
-	Vec2 GetBotLeft() const noexcept;
-	Vec2 const& GetBotRight() const noexcept;
-	Vec2 GetCenter() const noexcept;
+	[[nodiscard]] float GetWidth() const noexcept;
+	[[nodiscard]] float GetHeight() const noexcept;
+	[[nodiscard]] float GetDiagMag() const noexcept;
+	[[nodiscard]] float GetArea() const noexcept;
+	[[nodiscard]] float GetPerimeter() const noexcept;
+	[[nodiscard]] float GetLeft() const noexcept;
+	[[nodiscard]] float GetRight() const noexcept;
+	[[nodiscard]] float GetTop() const noexcept;
+	[[nodiscard]] float GetBot() const noexcept;
+	[[nodiscard]] Vec2 GetTopLeft() const noexcept;
+	[[nodiscard]] Vec2 GetTopRight() const noexcept;
+	[[nodiscard]] Vec2 GetBotLeft() const noexcept;
+	[[nodiscard]] Vec2 GetBotRight() const noexcept;
+	[[nodiscard]] Vec2 GetCenter() const noexcept;
 
 private:
 	Vec2 v0_;
