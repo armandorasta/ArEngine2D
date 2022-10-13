@@ -44,6 +44,12 @@
     <Filter Include="TextEditor">
       <UniqueIdentifier>{3ff99014-8328-4e97-92c2-5109dcf1b59a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Phy">
+      <UniqueIdentifier>{a92fea32-95ff-4f22-a442-0b2d8db66a35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Phy\ForceGenerators">
+      <UniqueIdentifier>{aeb83a09-ffe3-4917-9c22-cd7b2f2d0dd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Testing\ArTest20.h">
@@ -157,6 +163,69 @@
     <ClInclude Include="GuiSlider.h">
       <Filter>Gui</Filter>
     </ClInclude>
+    <ClInclude Include="IGuiElement.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="PhyGame.h">
+      <Filter>Phy</Filter>
+    </ClInclude>
+    <ClInclude Include="PhyUtil.h">
+      <Filter>Phy</Filter>
+    </ClInclude>
+    <ClInclude Include="PhyNotes.h">
+      <Filter>Phy</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Phy</Filter>
+    </ClInclude>
+    <ClInclude Include="PhyCore.h">
+      <Filter>Phy</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="ScopedTimer.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleForceRegistery.h">
+      <Filter>Phy</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleAttractionForce.h">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleDrag.h">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleForceGenerator.h">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleGravity.h">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSpring.h">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineCore.h">
+      <Filter>Impl\src</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleAnchoredSpring.h">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleBungee.h">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleBuoyancy.h">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiGame.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEvent.h">
+      <Filter>Impl\src\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FactoryGame.cpp">
@@ -228,6 +297,44 @@
     <ClCompile Include="GuiStatus.cpp">
       <Filter>Gui</Filter>
     </ClCompile>
+    <ClCompile Include="PhyGame.cpp">
+      <Filter>Phy</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Impl\src</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleAttractionForce.cpp">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleDrag.cpp">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleGravity.cpp">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleForceRegistery.cpp">
+      <Filter>Phy</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Phy</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Impl\src</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleAnchoredSpring.cpp">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleBungee.cpp">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleBuoyancy.cpp">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSpring.cpp">
+      <Filter>Phy\ForceGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiGame.cpp" />
+    <ClCompile Include="IGuiElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

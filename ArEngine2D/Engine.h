@@ -13,7 +13,7 @@ namespace ArEngine2D {
 	public:
 
 		/**
-		 * @brief starts and runs the game engine until the game window is closed.
+		 * @brief starts and runs the game eng until the game window is closed.
 		 */
 		void Run() noexcept;
 

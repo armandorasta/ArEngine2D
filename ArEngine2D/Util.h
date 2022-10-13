@@ -22,6 +22,10 @@ namespace ArEngine2D {
 	*/
 	class Util
 	{
+	private:
+		constexpr static auto sc_TextCharPerPixel{0.15f};
+		constexpr static auto sc_AsciiCharPerTextChar{0.5f};
+
 	public:
 
 		Util() = delete;
@@ -33,6 +37,14 @@ namespace ArEngine2D {
 		constexpr static auto HalfPi{Pi * 0.5f};
 
 	public:
+
+		[[nodiscard]]
+		constexpr static float RenderedTextToPixelRatio() noexcept
+		{ return sc_TextCharPerPixel; }
+
+		[[nodiscard]]
+		constexpr static float AsciiToRenderedTextRatio() noexcept
+		{ return sc_AsciiCharPerTextChar; }
 
 		/**
 		 * @brief outputs a formatted string to the debug console.

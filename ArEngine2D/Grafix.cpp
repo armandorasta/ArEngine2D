@@ -223,7 +223,23 @@ namespace ArEngine2D {
 	}
 	void Grafix::DrawString(Vec2 const& loc, std::string str, ColorF const& color, float size)
 	{
+		DrawStringRect(str, color, size, D2D1::RectF(
+			loc.x, loc.y, 
+			std::numeric_limits<float>::max(), 
+			std::numeric_limits<float>::max()
+		));
+	}
+	void Grafix::DrawStringCenter(Vec2 const& loc, std::string str, ColorF const& color, float size)
+	{ 
+		auto const sizeInPixels{size * 0.55f};
+		DrawString({loc.x - (0.5f * str.size()) * sizeInPixels, loc.y - 1.25f * sizeInPixels}, str, color, size);
+	}
+	void Grafix::DrawStringRect(std::string str, ColorF const& color, float size, D2D1_RECT_F rect)
+	{
 		pSolidBrush_->SetColor(color);
+
+		// make the size in pixels
+		size *= 1.f / 0.55f;
 
 		Details::Ptr<IDWriteTextFormat> pFormat{ };
 		HANDLE_GRAPHICS_ERROR(pDWriteFactory_->CreateTextFormat(
@@ -231,17 +247,14 @@ namespace ArEngine2D {
 			DWRITE_FONT_STRETCH_NORMAL, size, L"", &pFormat
 		));
 
-		D2D1_RECT_F const rect{
-			loc.x,
-			loc.y,
-			std::numeric_limits<float>::infinity(),
-			std::numeric_limits<float>::infinity()
-		};
 		std::wstring const wstr{str.begin(), str.end()};
 
 		BeginTransform();
-		pRenderTarget_->DrawText(wstr.c_str(), static_cast<UINT32>(std::size(wstr)),
-			pFormat.Get(), rect, pSolidBrush_.Get());
+		pRenderTarget_->DrawTextW(wstr.c_str(), static_cast<UINT32>(std::size(wstr)),
+			pFormat.Get(), rect, pSolidBrush_.Get(),
+			D2D1_DRAW_TEXT_OPTIONS_CLIP,
+			DWRITE_MEASURING_MODE_NATURAL
+		);
 		EndTransform();
 	}
 	void Grafix::DrawSprite(Vec2 const& loc, Sprite const& sprite, float opacity, Transform const& tr)

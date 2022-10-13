@@ -24,8 +24,8 @@ namespace ArEngine2D {
 	void Sprite::Initialize(std::wstring_view fileName)
 	{
 		// Safety checks so, I don't get confused with a nullptr runtime exception
-		assert(s_pRenderTarget_ && "Did not call InternalInitialization");
-		assert(not IsInitialized() && "Double initialization of Sprite");
+		AR2D_ASSERT(s_pRenderTarget_, "Did not call InternalInitialization");
+		AR2D_ASSERT(not IsInitialized(), "Double initialization of Sprite");
 
 		// Cheap to construct so, no need to pollute the class with static data members
 		Details::Ptr<IWICBitmapDecoder> pDecoder{};

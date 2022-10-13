@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ImplUtil.h"
+#include "EngineCore.h"
 
 #include <string>
 #include <string_view>

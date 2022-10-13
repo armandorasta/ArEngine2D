@@ -15,7 +15,7 @@
 
 namespace ArEngine2D {
 	/**
-	 * @brief abstract base class of all errors thrown by the engine.
+	 * @brief abstract base class of all errors thrown by the eng.
 	*/
 	class IEngineError
 	{

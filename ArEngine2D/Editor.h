@@ -91,7 +91,7 @@ namespace ArFac {
 		DataGrid<BlockInfo> grid_{32, 32};
 		DraggableCamera cam_;
 
-		// borrowed directly from the engine
+		// borrowed directly from the eng
 		Mouse& mouse_;
 		Keyboard& keyboard_;
 	};

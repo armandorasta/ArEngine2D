@@ -34,10 +34,12 @@ public:
 
 	void OnUserCreate() override
 	{
-		 //tits_.SetCursorWidth(0.f);
-		//tits_.SetCursorHeight(10000.f);
-		//tits_.SetThickness(0.f);
-		tits_.SetCursorType(gui::GuiSlider::CursorType::Ellipse);
+		widthSlider_.SetLoc({300.f, 50.f});
+		heightSlider_.SetLoc({300.f, 100.f});
+		sizeSlider_.SetLoc({300.f, 150.f});
+		widthSlider_.SetValue(width_);
+		heightSlider_.SetValue(height_);
+		sizeSlider_.SetValue(size_);
 	}
 
 	void OnUserUpdate(float dt) override
@@ -47,26 +49,50 @@ public:
 			1.f * (keyboard(Keys::S).IsDown() - keyboard(Keys::W).IsDown())
 		};
 
-		tits_.Update(mouse);
-
-		if (keyboard(Keys::Tab).IsPressed())
-		{
-			if (tits_.IsEnabled())
-			{
-				tits_.Disable();
-			}
-			else
-			{
-				tits_.Enable();
-			}
-		}
+		UpdateUI(dt);
 	}
 
-	void OnUserDraw(Grafix& gfx) override
+	void OnUserDraw(Grafix& gfx) override 
 	{
 		gfx.ClearScreen(Colors::DarkMagenta);
-		tits_.Draw(gfx, 6U);
-		gfx.DrawString(mouse.loc, std::format("{}", mouse.loc), Colors::LimeGreen, 20.f);
+
+		auto const center{window.Center()};
+		// gfx.DrawStringRect("This is your boy's long string of text", Colors::LimeGreen, size_,
+		// 	{center.x, center.y, center.x + width_, center.y + height_});
+		
+		// gfx.DrawRectangle(window.Center(), width_, height_, Colors::Yellow);
+
+		// DrawUI(gfx);
+
+		auto const myString{"hello"};
+		auto const fontSize{30.f};
+		gfx.DrawString(mouse.loc, myString, Colors::Lime, fontSize);
+		gfx.DrawRectangle(mouse.loc, 30.f * sizeof myString, fontSize * 1.25f, Colors::Magenta, 2.f);
+
+		// tits_.Draw(gfx, 6U);
+		// gfx.DrawString(mouse.loc, std::format("{}", mouse.loc), Colors::LimeGreen, 20.f);
+	}
+
+private:
+	void UpdateUI(float dt)
+	{
+		widthSlider_.Update(mouse);
+		heightSlider_.Update(mouse);
+		sizeSlider_.Update(mouse);
+
+		width_ = widthSlider_.GetValue();
+		height_ = heightSlider_.GetValue();
+		size_ = sizeSlider_.GetValue();
+	}
+
+	void DrawUI(Grafix& gfx)
+	{
+		gfx.DrawString({10.f, 20.f}, "width: ", Colors::White, 30.f);
+		widthSlider_.Draw(gfx);
+		gfx.DrawString({10.f, 70.f}, "height: ", Colors::White, 30.f);
+		heightSlider_.Draw(gfx);
+		gfx.DrawString({10.f, 120.f}, "size: ", Colors::White, 30.f);
+		sizeSlider_.Draw(gfx);
 	}
 
 private:
@@ -136,10 +162,22 @@ private:
 	}
 
 private:
-	gui::GuiSlider tits_{window.Center(), 100000.f, -360.f, 360.f,
+	gui::GuiSlider widthSlider_{{}, 300.f, 0.f, 700.f,
 		Colors::DarkBlue, Colors::Blue,
 		Colors::DarkGreen, Colors::Green,
 		Colors::White};
+	gui::GuiSlider heightSlider_{{}, 300.f, 0.f, 700.f,
+		Colors::DarkBlue, Colors::Blue,
+		Colors::DarkGreen, Colors::Green,
+		Colors::White};
+	gui::GuiSlider sizeSlider_{{}, 300.f, 1.f, 100.f,
+		Colors::DarkBlue, Colors::Blue,
+		Colors::DarkGreen, Colors::Green,
+		Colors::White};
+
+	float width_{200.f};
+	float height_{150.f};
+	float size_{30.f};
 };
 
 ARTED_END_NAMESPACE

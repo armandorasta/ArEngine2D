@@ -42,4 +42,33 @@ namespace ArEngine2D {
 			chars_.pop();
 		}
 	}
+	KeyEvent Keyboard::ReadKey()
+	{
+		AR2D_ASSERT(!keyEvents_.empty(), "Tried to readed from the keyboard when no keys are to be read.");
+		auto const& ev{keyEvents_.front()};
+		keyEvents_.pop();
+		return ev;
+	}
+	bool Keyboard::HasMoreKeys() const noexcept
+	{ return !keyEvents_.empty(); }
+	void Keyboard::FlushKeys()
+	{ 
+		while (!keyEvents_.empty())
+		{
+			keyEvents_.pop();
+		}
+	}
+	void Keyboard::FlushChars()
+	{
+		while (!chars_.empty())
+		{ 
+			chars_.pop(); 
+		}
+	}
+	void Keyboard::EnableAutoRepeat() noexcept
+	{ bAutoRepeat_ = true; }
+	void Keyboard::DisableAutoRepeat() noexcept
+	{ bAutoRepeat_ = false; }
+	bool Keyboard::IsAutoRepeatEnabled() const noexcept
+	{ return bAutoRepeat_; }
 }

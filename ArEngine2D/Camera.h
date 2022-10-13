@@ -15,10 +15,11 @@ namespace ArEngine2D {
 			Vec2 botRight;
 		};
 
-	public:
+	private:
 
 		inline static float const* s_pWindowWidth{};
 		inline static float const* s_pWindowHeight{};
+		static Camera s_CameraAtDefaultPosition;
 
 	public:
 
@@ -27,6 +28,8 @@ namespace ArEngine2D {
 
 		// users may not call this function
 		static void InternalInitialization(float* pWindowWidth, float* pWindowHeight);
+
+		static Camera const& CameraAtDefaultPosition() noexcept;
 
 	public:
 
@@ -78,6 +81,7 @@ namespace ArEngine2D {
 
 		void UpdateDrag(Key const& dragKey);
 		void UpdateZoomUsingScrollWheel();
+		void UpdateZoomUsing(Key const& zoomInKey, Key const& zoomOutKey);
 
 	public:
 

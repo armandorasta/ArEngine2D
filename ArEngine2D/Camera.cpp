@@ -1,6 +1,8 @@
 #include "Camera.h"
 
 namespace ArEngine2D {
+	Camera Camera::s_CameraAtDefaultPosition = {};
+
 	Camera::Camera() : Camera{{0.f, 0.f}, 1.f, 0.f} { }
 	Camera::Camera(Vec2 const& loc, float scale, float dir)
 		: loc_{loc}, scale_{scale}, dir_{dir} 
@@ -10,6 +12,10 @@ namespace ArEngine2D {
 		assert(s_pWindowWidth == nullptr and s_pWindowHeight == nullptr && "User tried to call Camera::InternalInitialization");
 		s_pWindowWidth = pWindowWidth;
 		s_pWindowHeight = pWindowHeight;
+	}
+	Camera const& Camera::CameraAtDefaultPosition() noexcept
+	{
+		return s_CameraAtDefaultPosition;
 	}
 	void Camera::MoveTo(Vec2 const& where) noexcept
 	{
@@ -149,6 +155,17 @@ namespace ArEngine2D {
 			if (e.IsUp())	Zoom(zoomSpeed_);
 			else			Zoom(1.f / zoomSpeed_);
 		});
+	}
+	void DraggableCamera::UpdateZoomUsing(Key const& zoomInKey, Key const& zoomOutKey)
+	{ 
+		if (zoomInKey.IsDown())
+		{
+			Zoom(zoomSpeed_);
+		}
+		else if (zoomOutKey.IsDown())
+		{
+			Zoom(1.f / zoomSpeed_);
+		}
 	}
 	void DraggableCamera::SetZoomSpeed(float newSpeed) noexcept
 	{ 

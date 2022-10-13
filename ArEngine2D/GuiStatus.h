@@ -2,21 +2,19 @@
 
 #include "GuiCore.h"
 
-ARGUI_BEGIN_NAMESPACE
+namespace ArGui {
+	enum class GuiStatus : Uint
+	{
+		Fine = 0,
+		UnknownError,
 
-enum class GuiStatus : Uint
-{
-	Fine = 0,
-	UnknownError,
+		EmptyText,
+		TextDoesNotFit,
 
-	EmptyText,
-	TextDoesNotFit,
-	
-	SizeTooSmall,
-	SizeTooBig,
-	OutOfBounds,
-};
+		SizeTooSmall,
+		SizeTooBig,
+		OutOfBounds,
+	};
 
-std::string GuiStatusToString(GuiStatus status) noexcept;
-
-ARGUI_END_NAMESPACE
+	std::string GuiStatusToString(GuiStatus status) noexcept;
+}

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -138,7 +138,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dwrite.lib;d2d1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
@@ -159,7 +159,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -169,14 +169,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EngineCore.h" />
     <ClInclude Include="FactoryCore.h" />
     <ClInclude Include="GuiButton.h" />
+    <ClInclude Include="GuiGame.h" />
     <ClInclude Include="GuiRectF.h" />
     <ClInclude Include="GuiSize.h" />
     <ClInclude Include="GuiSlider.h" />
     <ClInclude Include="GuiStatus.h" />
     <ClInclude Include="GuiUtil.h" />
     <ClInclude Include="GuiWindow.h" />
+    <ClInclude Include="IGuiElement.h" />
+    <ClInclude Include="KeyEvent.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleAnchoredSpring.h" />
+    <ClInclude Include="ParticleAttractionForce.h" />
+    <ClInclude Include="ParticleBungee.h" />
+    <ClInclude Include="ParticleBuoyancy.h" />
+    <ClInclude Include="ParticleDrag.h" />
+    <ClInclude Include="ParticleForceGenerator.h" />
+    <ClInclude Include="ParticleForceRegistery.h" />
+    <ClInclude Include="ParticleGravity.h" />
+    <ClInclude Include="ParticleSpring.h" />
+    <ClInclude Include="PhyCore.h" />
+    <ClInclude Include="PhyGame.h" />
+    <ClInclude Include="PhyNotes.h" />
+    <ClInclude Include="PhyUtil.h" />
+    <ClInclude Include="Random.h" />
+    <ClInclude Include="ScopedTimer.h" />
     <ClInclude Include="TeditGame.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Camera.h" />
@@ -201,6 +221,7 @@
     <ClInclude Include="Surface.h" />
     <ClInclude Include="TeditCore.h" />
     <ClInclude Include="Testing\ArTest20.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Vec2.h" />
@@ -219,14 +240,28 @@
     <ClInclude Include="Gui.h" />
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="GuiButton.cpp" />
+    <ClCompile Include="GuiGame.cpp" />
     <ClCompile Include="GuiRectF.cpp" />
     <ClCompile Include="GuiSlider.cpp" />
     <ClCompile Include="GuiStatus.cpp" />
     <ClCompile Include="IEngineError.cpp" />
+    <ClCompile Include="IGuiElement.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticleAnchoredSpring.cpp" />
+    <ClCompile Include="ParticleAttractionForce.cpp" />
+    <ClCompile Include="ParticleBungee.cpp" />
+    <ClCompile Include="ParticleBuoyancy.cpp" />
+    <ClCompile Include="ParticleDrag.cpp" />
+    <ClCompile Include="ParticleForceRegistery.cpp" />
+    <ClCompile Include="ParticleGravity.cpp" />
+    <ClCompile Include="ParticleSpring.cpp" />
+    <ClCompile Include="PhyGame.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Surface.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="Window.cpp" />

@@ -1,35 +1,34 @@
 #pragma once
 #include "GuiCore.h"
 #include "GuiButton.h"
+#include "GuiSlider.h"
 
-ARGUI_BEGIN_NAMESPACE
+namespace ArGui {
+	// SetText
+	// SetColor
+	// SetBGColor
+	// SetSize
+	// SetRect
+	// SetColor
+	// BGEnabled
+	// DisableBG
+	// EnableBG
+	// Draw
+	//
+	class GuiText;
 
-// SetText
-// SetColor
-// SetBGColor
-// SetSize
-// SetRect
-// SetColor
-// BGEnabled
-// DisableBG
-// EnableBG
-// Draw
-//
-class GuiText;
 
+	// for now, no resizeable windows.
+	class GuiWindow
+	{
+	public:
 
-// for now, no resizeable windows.
-class GuiWindow
-{
-public:
+		GuiWindow(std::string_view name, Uint width, Uint height);
 
-	GuiWindow(std::string_view name, Uint width, Uint height);
+	public:
 
-public:
-
-	GuiText& AddText(Uint x, Uint y);
-	GuiButton& AddButton(Uint x, Uint y);
-	GuiSlider& AddSliderFloat(Uint x, Uint y);
-};
-
-ARGUI_END_NAMESPACE
+		GuiText& AddText(Uint x, Uint y);
+		GuiButton& AddButton(Uint x, Uint y);
+		GuiSlider& AddSliderFloat(Uint x, Uint y);
+	};
+}

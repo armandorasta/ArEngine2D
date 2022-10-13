@@ -12,6 +12,7 @@ need docs:
 	* All ArGui
 	* Camera
 	* DraggableCamera
+	* Random
 
 ArFactory
 {
@@ -21,6 +22,8 @@ ArFactory
 
 ArGui
 {
+	* Redo GuiSlider.
+	* Add Gui Registery.
 	* Enhance DrawString with:
 		.DrawStringCenter
 		.DrawStringRectClip

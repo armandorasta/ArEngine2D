@@ -1,7 +1,5 @@
 #include "Gui.h"
 
-ARGUI_BEGIN_NAMESPACE
+namespace ArGui {
 
-
-
-ARGUI_END_NAMESPACE
+}
