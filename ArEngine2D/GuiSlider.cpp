@@ -4,12 +4,8 @@
 
 namespace ArGui {
 
-	GuiSlider::GuiSlider(Vec2 const& loc, float sliderLength, float minValue, float maxValue,
-		ColorF bgBaseCol, ColorF bgLineCol, ColorF fgBaseCol, ColorF fgLineCol, ColorF textCol) noexcept :
-		loc_{loc},
-		bgBaseCol_{bgBaseCol}, bgLineCol_{bgLineCol},
-		fgBaseCol_{fgBaseCol}, fgLineCol_{fgLineCol},
-		textCol_{textCol}
+	GuiSlider::GuiSlider(Vec2 const& loc, float sliderLength, float minValue, float maxValue) noexcept 
+		: loc_{loc}
 	{
 		ARGUI_ASSERT(minValue < maxValue, "Invalid limits");
 
@@ -25,9 +21,9 @@ namespace ArGui {
 		curValue_ = minValue;
 	}
 
-	void GuiSlider::Update(Mouse const& mouse, Keyboard const&, float) noexcept
+	void GuiSlider::Update(Mouse const& mouse) noexcept
 	{
-		if (!IsEnabled())
+		if (!Enabled)
 		{
 			return;
 		}
@@ -86,26 +82,11 @@ namespace ArGui {
 
 	void GuiSlider::SetValue(float newValue) noexcept
 	{
-		curValue_ = ClampMinMax(newValue);
+		curValue_ = std::clamp(curValue_, minValue_, maxValue_);
 	}
 
 	void GuiSlider::AddValue(float del) noexcept
 	{ SetValue(curValue_ + del); }
-
-	bool GuiSlider::IsEnabled() const noexcept
-	{ return bEnabled_; }
-
-	void GuiSlider::Enable() noexcept
-	{
-		ARGUI_ASSERT(!bEnabled_, "Tried to enable GuiSlider already enabled");
-		bEnabled_ = true;
-	}
-
-	void GuiSlider::Disable() noexcept
-	{
-		ARGUI_ASSERT(bEnabled_, "Tried to disable GuiSlider already disabled");
-		bEnabled_ = false;
-	}
 
 	void GuiSlider::SetMinValue(float newMinValue) noexcept
 	{
@@ -118,7 +99,7 @@ namespace ArGui {
 	{
 		ARGUI_ASSERT(newMaxValue > minValue_, "Invalid max value");
 		maxValue_ = newMaxValue;
-		curValue_ = ClampMinMax(curValue_);
+		SetValue(curValue_);
 	}
 
 	void GuiSlider::SetMinMaxValue(float newMin, float newMax) noexcept
@@ -126,73 +107,22 @@ namespace ArGui {
 		ARGUI_ASSERT(newMin < newMax, "Invalid limits");
 		minValue_ = newMin;
 		maxValue_ = newMax;
-		curValue_ = ClampMinMax(curValue_);
+		SetValue(curValue_);
 	}
 
 	void GuiSlider::SetLength(float newLength) noexcept
 	{
-		sliderLen_ = ClampSize(newLength);
+		sliderLen_ = std::clamp(newLength, sc_MinSliderLength, sc_MaxSliderLength);
 	}
 
-	void GuiSlider::SetFGBaseColor(ColorF const& newColor) noexcept
-	{ fgBaseCol_ = newColor; }
-
-	void GuiSlider::SetFGLineColor(ColorF const& newColor) noexcept
-	{ fgLineCol_ = newColor; }
-
-	void GuiSlider::SetBGBaseColor(ColorF const& newColor) noexcept
-	{ bgBaseCol_ = newColor; }
-
-	void GuiSlider::SetBGLineColor(ColorF const& newColor) noexcept
-	{ bgLineCol_ = newColor; }
-
-	void GuiSlider::SetTextColor(ColorF const& newColor) noexcept
-	{ textCol_ = newColor; }
-
-	void GuiSlider::Draw(Grafix& gfx)
-	{
-		// the slider in the back
-		gfx.FillRectangleCenter(loc_, sliderLen_, sliderThick_, bgBaseCol_);
-		gfx.DrawRectangleCenter(loc_, sliderLen_, sliderThick_, bgLineCol_, 2.f);
-
-		// the cursor
-		Vec2 const cursorLoc{GetCursorLoc()};
-		switch (cursorType_)
-		{
-		case CursorType::Rectangle:
-		{
-			gfx.FillRectangleCenter(cursorLoc, cursorWidth_, cursorHeight_, fgBaseCol_);
-			gfx.DrawRectangleCenter(cursorLoc, cursorWidth_, cursorHeight_, fgLineCol_, 2.f);
-			break;
-		}
-		case CursorType::Ellipse:
-		{
-			auto const rx{cursorWidth_ * 0.5f};
-			auto const ry{cursorHeight_ * 0.5f};
-			gfx.FillEllipse(cursorLoc, rx, ry, fgBaseCol_);
-			gfx.DrawEllipse(cursorLoc, rx, ry, fgLineCol_, 2.f);
-			break;
-		}
-		default:
-		{
-			ARGUI_ASSERT(false, "Invalid cursor type");
-			break;
-		}
-		}
-
-		Vec2 const textOffset{
-			cursorLoc.x - cursorWidth_ * 0.5f,
-			cursorLoc.y - cursorHeight_ - Util::AsciiToRenderedTextRatio() * 20.f
-		};
-		gfx.DrawString(textOffset, std::format("{0:.{1}f}", curValue_, 2), textCol_, 20.f);
-	}
-
-	void GuiSlider::Draw(Grafix& gfx, Camera const& cam)
+	void GuiSlider::Draw(Grafix& gfx, Camera const& cam,
+		ColorF const& lineColor, ColorF const& bgColor,
+		ColorF const& cursorColor, ColorF const& textColor) noexcept
 	{
 		auto const camScale{cam.Scale()};
 		// the slider in the back
-		gfx.FillRectangleCenter(cam(loc_), sliderLen_ * camScale, sliderThick_ * camScale, bgBaseCol_);
-		gfx.DrawRectangleCenter(cam(loc_), sliderLen_ * camScale, sliderThick_ * camScale, bgLineCol_, 2.f);
+		gfx.FillRectangleCenter(cam(loc_), sliderLen_ * camScale, sliderThick_ * camScale, bgColor);
+		gfx.DrawRectangleCenter(cam(loc_), sliderLen_ * camScale, sliderThick_ * camScale, lineColor, 2.f);
 
 		// the cursor
 		Vec2 const cursorLoc{GetCursorLoc()};
@@ -200,16 +130,16 @@ namespace ArGui {
 		{
 		case CursorType::Rectangle:
 		{
-			gfx.FillRectangleCenter(cam(cursorLoc), cursorWidth_ * camScale, cursorHeight_ * camScale, fgBaseCol_);
-			gfx.DrawRectangleCenter(cam(cursorLoc), cursorWidth_ * camScale, cursorHeight_ * camScale, fgLineCol_, 2.f);
+			gfx.FillRectangleCenter(cam(cursorLoc), cursorWidth_ * camScale, cursorHeight_ * camScale, cursorColor);
+			gfx.DrawRectangleCenter(cam(cursorLoc), cursorWidth_ * camScale, cursorHeight_ * camScale, lineColor, 2.f);
 			break;
 		}
 		case CursorType::Ellipse:
 		{
 			auto const rx{cursorWidth_ * 0.5f * camScale};
 			auto const ry{cursorHeight_ * 0.5f * camScale};
-			gfx.FillEllipse(cam(cursorLoc), rx, ry, fgBaseCol_);
-			gfx.DrawEllipse(cam(cursorLoc), rx, ry, fgLineCol_, 2.f);
+			gfx.FillEllipse(cam(cursorLoc), rx, ry, cursorColor);
+			gfx.DrawEllipse(cam(cursorLoc), rx, ry, lineColor, 2.f);
 			break;
 		}
 		default:
@@ -219,15 +149,17 @@ namespace ArGui {
 		}
 		}
 
-		Vec2 const textOffset{
-			cursorLoc.x - cursorWidth_ * 0.5f,
-			cursorLoc.y - cursorHeight_ - Util::AsciiToRenderedTextRatio() * 20.f
-		};
-		gfx.DrawString(cam(textOffset), std::format("{0:.{1}f}", curValue_, 2), textCol_, 20.f * camScale);
+		// TODO: Handle drawing text here.
 	}
 
-	Vec2 const& GuiSlider::GetLoc() const noexcept
+	GuiElementType GuiSlider::GetType() const noexcept
+	{ return GuiElementType::Slider; }
+
+	Vec2 GuiSlider::GetLoc() const noexcept
 	{ return loc_; }
+
+	GuiRectF GuiSlider::GetRectF(Camera const& cam) const noexcept
+	{ return {cam(loc_), sliderLen_ * cam.Scale(), sliderThick_ * cam.Scale()}; }
 
 	float GuiSlider::GetValue() const noexcept
 	{ return curValue_; }
@@ -252,31 +184,6 @@ namespace ArGui {
 
 	float GuiSlider::GetLength() const noexcept
 	{ return sliderLen_; }
-
-	ColorF GuiSlider::GetFGBaseColor() const noexcept
-	{ return fgBaseCol_; }
-
-	ColorF GuiSlider::GetFGLineColor() const noexcept
-	{ return fgLineCol_; }
-
-	ColorF GuiSlider::GetBGBaseColor() const noexcept
-	{ return bgBaseCol_; }
-
-	ColorF GuiSlider::GetBGLineColor() const noexcept
-	{ return bgLineCol_; }
-
-	ColorF GuiSlider::GetTextColor() const noexcept
-	{ return textCol_; }
-
-	float GuiSlider::ClampSize(float size) noexcept
-	{
-		return std::clamp(size, sc_MinSliderLength, sc_MaxSliderLength);
-	}
-
-	float GuiSlider::ClampMinMax(float value) const noexcept
-	{
-		return std::clamp(value, minValue_, maxValue_);
-	}
 
 	Vec2 GuiSlider::GetCursorLoc() const noexcept
 	{

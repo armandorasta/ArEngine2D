@@ -109,7 +109,7 @@
     <ClInclude Include="FactoryCore.h">
       <Filter>Factory\src</Filter>
     </ClInclude>
-    <ClInclude Include="Gui.h">
+    <ClInclude Include="GuiManager.h">
       <Filter>Gui</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
@@ -282,7 +282,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Impl\src</Filter>
     </ClCompile>
-    <ClCompile Include="Gui.cpp">
+    <ClCompile Include="GuiManager.cpp">
       <Filter>Gui</Filter>
     </ClCompile>
     <ClCompile Include="GuiButton.cpp">
@@ -333,8 +333,18 @@
     <ClCompile Include="ParticleSpring.cpp">
       <Filter>Phy\ForceGenerators</Filter>
     </ClCompile>
-    <ClCompile Include="GuiGame.cpp" />
-    <ClCompile Include="IGuiElement.cpp" />
+    <ClCompile Include="GuiGame.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiUtil.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiWindow.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="IGuiElement.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

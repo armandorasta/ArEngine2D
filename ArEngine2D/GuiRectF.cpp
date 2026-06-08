@@ -5,7 +5,9 @@
 namespace ArGui {
 	GuiRectF::GuiRectF(float x, float y, float w, float h) noexcept
 		: v0_{x, y}, v1_{x + w, y + h}
-	{ }
+	{ 
+		SwapAnyIfNeeded();
+	}
 
 	GuiRectF::GuiRectF(Vec2 const& loc, float w, float h) noexcept
 		: GuiRectF{loc.x, loc.y, w, h}
@@ -13,16 +15,7 @@ namespace ArGui {
 
 	GuiRectF::GuiRectF(Vec2 const& v0, Vec2 const& v1) noexcept
 		: GuiRectF{v0.x, v0.y, v1.x, v1.y}
-	{
-		if (v0_.x > v1_.x)
-		{
-			std::swap(v0_.x, v1_.x);
-		}
-		if (v0_.y > v1_.y)
-		{
-			std::swap(v0_.y, v1_.y);
-		}
-	}
+	{ }
 
 	bool GuiRectF::Contains(Vec2 const& point) const noexcept
 	{
@@ -118,10 +111,14 @@ namespace ArGui {
 	}
 
 	void GuiRectF::Fill(Grafix& gfx, Camera cam, ColorF const& col) noexcept
-	{ gfx.FillRectangle(cam(v0_), cam(v1_), col); }
+	{ 
+		gfx.FillRectangle(cam(v0_), cam(v1_), col); 
+	}
 
 	void GuiRectF::Fill(Grafix& gfx, ColorF const& col) noexcept
-	{ gfx.FillRectangle(v0_, v1_, col); }
+	{ 
+		gfx.FillRectangle(v0_, v1_, col); 
+	}
 
 	void GuiRectF::SetWidth(float newWidth) noexcept
 	{

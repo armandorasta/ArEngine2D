@@ -17,18 +17,26 @@ namespace ArEngine2D {
 }
 
 namespace ArGui {
+	enum class GuiElementType
+	{
+		Button,
+		Slider,
+		Window,
+	};
+
 	class IGuiElement
 	{
 	public:
 		IGuiElement() = default;
 
 	public:
-		virtual void Draw(Grafix& gfx);
-		virtual void Draw(Grafix& gfx, Camera const& cam) = 0;
-		virtual void Update(Mouse const& mouse, Keyboard const& keyboard, float dt) noexcept = 0;
+		[[nodiscard]] virtual GuiElementType GetType() const noexcept = 0;
+		[[nodiscard]] virtual Vec2 GetLoc() const noexcept = 0;
+		[[nodiscard]] virtual GuiRectF GetRectF(Camera const& cam) const noexcept = 0;
 
+		virtual void SetLoc(Vec2 newLoc) noexcept = 0;
 	public:
-		bool Visible;
-		bool Enabled;
+		bool Visible{true};
+		bool Enabled{true};
 	};
 }

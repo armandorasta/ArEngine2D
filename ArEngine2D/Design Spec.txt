@@ -1,0 +1,367 @@
+
+
+// Will be used in a switch statament to update each component properly.
+enum GuiElementType 
+{
+	Other, // Does not need to be updated.
+	Window,
+	Button,
+	Slider,
+	ScrollBar,
+	TextField,
+	DropDownMenu,
+	Menu,
+}
+
+Gui Element 
+{
+	contains 
+	{
+		- Basically anything every element should have.
+	}
+
+	behaviour 
+	{
+	}
+
+	structure 
+	{
+		class IGuiElement 
+		{
+			member functions 
+			{
+				Getters 
+				{
+					Location;
+					Rectangle in screen coordinates: pure;
+					Rectangle in camera coordinates (takes the camera as a paramter): pure;
+					Location: pure;
+					Element type: GuiElementType;
+				}
+
+				Setters 
+				{
+					Location;
+				}
+			}
+
+			member data 
+			{
+				public 
+				{
+					Whether the component is enabled: bool;
+					Whether the component is visible: bool;
+				}
+			}
+		}
+	}
+}
+
+
+Window 
+{
+	contains 
+	{
+		- Title bar (disableable).
+		- Client area.
+		- Close button.
+		- Minmize button.
+		- Maxmize button.
+		- Scroll bar (when needed).
+		- Resize frame.
+		- Sys menu on top (disableable).
+	}
+
+	behaviour 
+	{
+		- Update all of it's components 
+			{
+				some will get updated always, others only when the window is active.
+			}
+		- Draw all of it's components.
+		- Handle mouse clicks properly 
+			{
+				a click on a button should not be able to drag the window for example.
+			}
+		- Handle child windows properly 
+			{ 
+				such as message boxs.
+			}
+		- Should Support draging which should be disableable.
+		- Should be resizeable 
+			{
+				- Maximization, minimization, resizing should all be handled properly,
+				and be disableable.
+				- Should have a scroll bar when needed.
+				- Should be dockable on all on four directions and more.
+			}
+		- Should be closable.
+		- Should handle draging items out of it properly 
+			{
+				same as how windows handles copying a file by draging.
+			}
+	}
+
+	Structure 
+	{
+		class GuiWindow : IGuiElement 
+		{
+			member functions 
+			{
+				statics 
+				{
+				}
+
+				Width?;
+				Height?;
+				Size?;
+				Center?;
+
+				Update; // Will do alot.
+				Draw;
+
+			}
+			
+			private member data 
+			{
+				constants 
+				{
+					Title bar hieght: float;
+					Title button height: float;
+					Minimum width and height: float;
+					Maximum width and height: float;
+				}
+
+				looks 
+				{
+					Title: string;
+					Texture: [could be a plane color or a sprite];
+				}
+
+				logic 
+				{
+					Rectangle of the client area: GuiRectF;
+					Rectangle of the title bar: GuiRectF;
+			
+					Registery of all components: GuiRegistery;
+					Collection of child windows;
+					Collection of panels;
+					Collection of all child elements;
+					Draging info; 
+				}
+			}
+		}
+
+		class GuiRegistery 
+		{
+			member functions 
+			{
+				Add;
+				Remove;
+				Clear;
+				Size;
+				begin and end for iteration 
+				{
+					These should return references the data inside the registery elements 
+					rather than the whole thing.
+				}
+			}
+
+			private member data 
+			{
+				Collection of GuiRegisteryElement;
+			}
+		}
+
+		class GuiRegisteryElement 
+		{
+			member functions 
+			{
+				Update mode?: UpdateMode;
+				ID?: Uint;
+
+				Update location using offset;
+			}
+
+			private member data 
+			{
+				ID: Uint;
+				Pointer to the element in the pool: IGuiElement*;
+				Offset from window location: Vec2; 
+			}
+		}
+
+		enum UpdateMode 
+		{
+			WhenEnabled,
+			WhenDisabled,
+			Always,
+			Never,
+		}
+
+		class GuiPanel 
+		{
+			member functions
+			{
+				Height?;
+				Width?;
+				Maximum and minimum width and height?;
+				Set width;
+				Set height;
+				Update layout;
+			}
+
+			private member data
+			{
+				Minimum and minimum width and height: float;
+				Location relative to the window: Vec2;
+				Collection of child panels 
+				Registery of child components;
+				{
+					If it has any child panels then it can not have any components, 
+					and vise-versa.
+				}
+			}
+		}
+	}
+}
+
+Gui Manager 
+{
+	behaviour 
+	{
+		- Put the right window into focus and only have one window enabled at a time.
+		- Should allow dynamically creating new elements at run-time.
+	}
+
+	structure 
+	{
+		class GuiManager 
+		{
+			member functions 
+			{
+				New window 
+				{
+					Any successive calls will add components to this window.
+				} 
+				
+				// Components will return a proxy which they will be customized through.
+				New message box;
+				New button; 
+				New slider;
+				New text field;
+				New checkbox;
+				New drop-down menu;
+				New menu;
+			}
+
+			private member data 
+			{
+				Collection of all windows: [a stack of some sort];
+			}
+		}
+
+		class GuiButtonProxy 
+		{
+			member functions 
+			{
+				operator bool 
+				{
+					will return true when a press (actually a release) on the button happens. 
+				}
+
+				Mouse is hovering?;
+				Enabled?;
+				Disabled?;
+
+				Set text;
+				Set text color;
+				Set line color;
+				Set background color;
+				Enable;
+				Disable;
+				On update 
+				{
+					This will take a callable will be invoked every frame.
+				}
+			}
+
+			private member data
+			{
+				Reference to the actual button;
+			}
+		}
+
+		class GuiSliderProxy 
+		{
+			member functions 
+			{
+				Mouse is hovering over cursor?;
+				Enabled?;
+				Disabled?;
+				Maximum value?;
+				Minimum value?;
+				Current value?;
+
+				Set cursor color;
+				Set line color;
+				Set background color;
+				Enable;
+				Disable;
+				Reset;
+				Set value;
+				Set minimum value;
+				Set maximum value;
+
+				On update 
+				{
+					This will take a callable will be invoked every frame.
+				}
+			}
+
+			private member data
+			{
+				Reference to the actual slider;
+			}
+		}
+	}
+}
+
+Animations
+{
+	behaviour
+	{
+	}
+
+	structure
+	{
+		class IAnimation
+		{
+			member functions
+			{
+				Time since start?;
+				Time until end?;
+
+				Set speed;
+				Reset;
+				Start;
+				Pause;
+				Reverse;
+
+				Update: pure;
+			}
+
+			private member data 
+			{
+				Timer;
+				Speed: float;
+				Animation is reversed: bool;
+			}
+		}
+	}
+}
+
+Panels 
+{
+
+}

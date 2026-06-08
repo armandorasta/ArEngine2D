@@ -3,6 +3,8 @@
 #include "GuiCore.h"
 
 namespace ArGui {
+	class GuiRectF;
+
 	namespace Con {
 		template <class T>
 		concept Number = std::integral<T> || std::floating_point<T>;
@@ -40,5 +42,40 @@ namespace ArGui {
 		{
 			return (p.x > rtl.x && p.x < rbr.x) && (p.y > rtl.y && p.y < rbr.y);
 		}
+
+		[[nodiscard]]
+		static bool IsPointInRect(Vec2 const& p, GuiRectF const& rect);
+
+		constexpr static void HandleDrag(Vec2 dragRegionTopLeft, Vec2 dragRegionBotRight,
+			Mouse const& mouse, bool* pbMouseLanded, Vec2* pMouseLandLoc, Vec2* pOtherLandLoc, Vec2* pOtherLoc)
+		{
+			auto& bMouseLanded{*pbMouseLanded};
+			auto& mouseLandLoc{*pMouseLandLoc};
+			auto& otherLandLoc{*pOtherLandLoc};
+			auto& otherLoc{*pOtherLoc};
+
+			if (mouse.left.IsPressed() &&
+				Util::IsPointInRect(mouse.loc, dragRegionTopLeft, dragRegionBotRight))
+			{
+				mouseLandLoc = mouse.loc;
+				otherLandLoc = otherLoc;
+				bMouseLanded = true;
+			}
+
+			if (bMouseLanded)
+			{
+				if (mouse.left.IsDown())
+				{
+					otherLoc = otherLandLoc + (mouse.loc - mouseLandLoc);
+				}
+				else
+				{
+					bMouseLanded = false;
+				}
+			}
+		}
+
+		static void HandleDrag(GuiRectF const& dragRegion, Mouse const& mouse, bool* bMouseLanded,
+			Vec2* mouseLandLoc, Vec2* otherLandLoc, Vec2* otherLoc);
 	};
 }

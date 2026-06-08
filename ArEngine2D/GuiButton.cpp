@@ -2,17 +2,17 @@
 #include "Camera.h"
 
 namespace ArGui {
-	GuiButton::GuiButton(Vec2 const& loc, std::string_view text, float width, float height,
-		ColorF const& activeTextCol, ColorF const& activeBGCol, ColorF const& activeLineCol) noexcept :
-		rect_{loc, ClampSize(width), ClampSize(height)},
-		text_{text}, textCol_{activeTextCol}, bgCol_{activeBGCol}, lineCol_{activeLineCol}
+	GuiButton::GuiButton(Vec2 const& loc, std::string_view text, float width, float height) noexcept 
+		: rect_{loc, ClampSize(width), ClampSize(height)}, text_{text} 
 	{
 		rect_.RelCenter(rect_.GetTopLeft());
 		UpdateTextSize();
 	}
 
-	void GuiButton::SetLoc(Vec2 const& newLoc) noexcept
-	{ rect_.RelCenter(newLoc); }
+	void GuiButton::SetLoc(Vec2 newLoc) noexcept
+	{ 
+		rect_.RelCenter(newLoc); 
+	}
 
 	GuiStatus GuiButton::SetText(std::string_view newText)
 	{
@@ -37,25 +37,18 @@ namespace ArGui {
 		return currStatus_;
 	}
 
-	void GuiButton::SetBGColor(ColorF const& newBGCol) noexcept
-	{ bgCol_ = newBGCol; }
-
-	void GuiButton::SetTextColor(ColorF const& newTextCol) noexcept
-	{ textCol_ = newTextCol; }
-
-	void GuiButton::SetLineColor(ColorF const& newLineCol) noexcept
-	{ lineCol_ = newLineCol; }
-
-	void GuiButton::Draw(Grafix& gfx, Camera const& cam)
+	void GuiButton::Draw(Grafix& gfx, Camera const& cam,
+		ColorF const& bgColor, ColorF const& lineColor, ColorF const& textColor) noexcept
 	{ 
-		if (!IsVisible())
+		if (!Visible)
 		{
 			return;
 		}
 
-		rect_.Fill(gfx, cam, bgCol_);
-		rect_.Draw(gfx, cam, lineCol_, 2.f);
+		rect_.Fill(gfx, cam, bgColor);
+		rect_.Draw(gfx, cam, lineColor, 2.f);
 
+		// TODO: handle text here.
 		if (false && !text_.empty())
 		{
 			auto center{rect_.GetCenter()};
@@ -64,19 +57,20 @@ namespace ArGui {
 			auto const scalar{Util::AsciiToRenderedTextRatio() * textSize_};
 			center.x -= (text_.size() * 0.5f) * scalar;
 			center.y -= scalar;
-			gfx.DrawString(center, text_, textCol_, textSize_);
+			gfx.DrawString(center, text_, textColor, textSize_);
 		}
 	}
 
-	void GuiButton::Update(Mouse const& mouse, Keyboard const& keyboard, float dt) noexcept
+	void GuiButton::Update(Mouse const& mouse, Camera const& cam) noexcept
 	{
-		if (!IsEnabled())
+		if (!Enabled)
 		{
 			return;
 		}
 
+		auto const camMouseLoc{cam[mouse.loc]};
 		auto const bContainedLastFrame{rect_.Contains(mouseLocLastFrame_)};
-		auto const bContainedCurrFrame{rect_.Contains(mouse.loc)};
+		auto const bContainedCurrFrame{rect_.Contains(camMouseLoc)};
 		auto const bMouseDown{mouse.left.IsDown()};
 		if (bContainedCurrFrame)
 		{
@@ -112,56 +106,11 @@ namespace ArGui {
 			bMouseHovered_ = false;
 		}
 
-		mouseLocLastFrame_ = mouse.loc;
+		mouseLocLastFrame_ = camMouseLoc;
 	}
 
-	bool GuiButton::IsEnabled() const noexcept
-	{ return bActive_; }
-
-	void GuiButton::Enable() noexcept
-	{
-		ARGUI_ASSERT(!bActive_, "Called Enable when window was already active");
-		bActive_ = true;
-	}
-
-	void GuiButton::Disable() noexcept
-	{
-		ARGUI_ASSERT(bActive_, "Called Disable when window was already not active");
-		bActive_ = false;
-	}
-
-	bool GuiButton::IsVisible() const noexcept
-	{ return bVisible_; }
-
-	void GuiButton::Show() noexcept
-	{
-		ARGUI_ASSERT(!bVisible_, "Called Show when window was already shown");
-		bVisible_ = true;
-	}
-
-	void GuiButton::Hide() noexcept
-	{
-		ARGUI_ASSERT(bVisible_, "Called Hide when window was already hidden");
-		bVisible_ = false;
-	}
-
-	bool GuiButton::IsMouseEntered() const noexcept
-	{ return bMouseHovered_; }
-
-	bool GuiButton::IsMouseHovered() const noexcept
-	{ return bMouseHovered_; }
-
-	bool GuiButton::IsMouseClicked() const noexcept
-	{ return bMouseClicked_; }
-
-	bool GuiButton::IsMouseHeldDown() const noexcept
-	{ return bMouseHeld_; }
-
-	bool GuiButton::IsMouseReleased() const noexcept
-	{ return bMouseReleased_; }
-
-	bool GuiButton::IsMouseLeft() const noexcept
-	{ return bMouseLeft_; }
+	GuiElementType GuiButton::GetType() const noexcept
+	{ return GuiElementType::Button; }
 
 	Vec2 GuiButton::GetLoc() const noexcept
 	{ return rect_.GetCenter(); }
@@ -175,20 +124,42 @@ namespace ArGui {
 	float GuiButton::GetHeight() const noexcept
 	{ return rect_.GetHeight(); }
 
-	ColorF const& GuiButton::GetBGColor() const noexcept
-	{ return bgCol_; }
-
-	ColorF const& GuiButton::GetTextColor() const noexcept
-	{ return textCol_; }
-
-	ColorF const& GuiButton::GetLineColor() const noexcept
-	{ return lineCol_; }
-
 	GuiStatus GuiButton::GetStatus() const noexcept
 	{ return currStatus_; }
 
-	GuiRectF const& GuiButton::GetRectF() const noexcept
-	{ return rect_; }
+	GuiRectF GuiButton::GetRectF(Camera const& cam) const noexcept
+	{
+		auto r{rect_};
+		r.ScaleTopLeft(cam.Scale());
+		r.RelTopLeft(cam(rect_.GetTopLeft()));
+		return r;
+	}
+
+	bool GuiButton::IsMouseClicked() const noexcept
+	{
+		return bMouseClicked_;
+	}
+	bool GuiButton::IsMouseHeld() const noexcept
+	{
+		return bMouseHeld_;
+	}
+	bool GuiButton::IsMouseJustReleased() const noexcept
+	{
+		return bMouseReleased_;
+	}
+	bool GuiButton::IsMouseEntered() const noexcept
+	{
+		return bMouseEntered_;
+	}
+	bool GuiButton::IsMouseHovered() const noexcept
+	{
+		return bMouseHovered_;
+	}
+	bool GuiButton::IsMouseLeft() const noexcept
+	{
+		return bMouseLeft_;
+	}
+
 
 	void GuiButton::UpdateStatus(bool condition, GuiStatus ifTrueOtherwiseFine) noexcept
 	{ currStatus_ = !condition ? ifTrueOtherwiseFine : GuiStatus::Fine; }

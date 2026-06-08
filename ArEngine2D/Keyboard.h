@@ -23,21 +23,10 @@ namespace ArEngine2D {
 
 	public:
 
-		KeyEvent ReadKey();
-		bool HasMoreKeys() const noexcept;
-		constexpr bool IsKeyDown(Keys key) const noexcept
-		{
-			auto const id{KeyToID(key)};
-			assert(id < Keyboard::sc_KeyCount);
-			return keyStates_[id];
-		}
-
-		void FlushKeys();
+		/**
+		 * @brief Flushes the character buffer.
+		*/
 		void FlushChars();
-
-		void EnableAutoRepeat() noexcept;
-		void DisableAutoRepeat() noexcept;
-		bool IsAutoRepeatEnabled() const noexcept;
 
 		/**
 		 * @return the state of the specified key.
@@ -96,9 +85,6 @@ namespace ArEngine2D {
 		void Reset();
 
 	private:
-		bool bAutoRepeat_{true};
-		std::queue<KeyEvent> keyEvents_;
-		std::array<bool, sc_KeyCount> keyStates_{};
 		std::array<Key, sc_KeyCount> keys_;
 		std::queue<char> chars_;
 	};

@@ -237,13 +237,15 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="FactoryGame.cpp" />
     <ClCompile Include="Grafix.cpp" />
-    <ClInclude Include="Gui.h" />
-    <ClCompile Include="Gui.cpp" />
+    <ClInclude Include="GuiManager.h" />
+    <ClCompile Include="GuiManager.cpp" />
     <ClCompile Include="GuiButton.cpp" />
     <ClCompile Include="GuiGame.cpp" />
     <ClCompile Include="GuiRectF.cpp" />
     <ClCompile Include="GuiSlider.cpp" />
     <ClCompile Include="GuiStatus.cpp" />
+    <ClCompile Include="GuiUtil.cpp" />
+    <ClCompile Include="GuiWindow.cpp" />
     <ClCompile Include="IEngineError.cpp" />
     <ClCompile Include="IGuiElement.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -269,6 +271,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="DataGridTestResults.txt" />
+    <Text Include="Design Spec.txt" />
     <Text Include="FacLevel.txt" />
     <Text Include="notes.txt" />
   </ItemGroup>
